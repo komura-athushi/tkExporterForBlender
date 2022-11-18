@@ -1,0 +1,22 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.11.17
+# options: -o C:\Users\akuro\AppData\Local\Temp\tmpi9ua87__.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
+shader simple_material
+param	color	Diffuse_Color	0.600000024 0.800000012 0.600000024		%read{1,1} %write{2147483647,-1}
+param	float	Noise_Factor	0.5		%read{2147483647,-1} %write{2147483647,-1}
+param	normal	n	0 0 0		%read{2147483647,-1} %write{0,0} %initexpr
+oparam	color	BSDF	0 0 0		%read{2147483647,-1} %write{2,2}
+global	normal	N	%read{0,0} %write{2147483647,-1}
+local	color	material_color	%read{2,2} %write{1,1}
+code n
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\test.osl:5
+#     //output closure color BSDF = diffuse(N)
+	assign		n N 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\test.osl"} %line{5} %argrw{"wr"}
+code ___main___
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\test.osl:10
+#     //BSDF = material_color * diffuse(N);
+	assign		material_color Diffuse_Color 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\test.osl"} %line{10} %argrw{"wr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\test.osl:12
+# }
+	assign		BSDF material_color 	%line{12} %argrw{"wr"}
+	end

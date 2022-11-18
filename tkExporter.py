@@ -53,6 +53,9 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         subtype='FILE_PATH',                                #サブタイプ
     )
 
+    def print_data(self,message):
+        self.report({'INFO'}, str(message))
+
     #ボタンを押すとexecuteの前に呼ばれる関数。
     def invoke(self, context, event):
         mesh = context.object
@@ -82,6 +85,18 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
   
     #invokeの後に呼ばれる関数
     def execute(self, context):
+        #編集モードに切り替える
+        bpy.ops.object.mode_set(mode='EDIT')
+
+        #メッシュデータを取得
+        mesh = context.object.data
+
+        #メッシュデータ4つの配列
+        #mesh.vertices 3つの頂点
+        #mesh.edges 1つの辺
+        #mesh.loops 単一の頂点とエッジ
+        #mesh.polygons  ポリゴン
+        self.print_data(len(mesh.polygons))
 
         print("pushed")
         return{'FINISHED'}
