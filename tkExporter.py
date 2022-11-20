@@ -1,6 +1,8 @@
 import copy
 import struct
 import os
+import re
+import pathlib
 
 import bpy
 from bpy.props import StringProperty
@@ -23,6 +25,8 @@ bl_info = {
     "tracker_url": ""
 }
 
+ALBEDO_TEXTURE = "albedo"
+
 class Vertex:
     def __init__(self):
         self.position = [0.0,0.0,0.0]
@@ -41,7 +45,8 @@ class TkExporter_PT_Panel(bpy.types.Panel):
     def draw(self, context):
         self.layout.operator("tkexporter.tkm")
 
-#tkmファイルを出力したい
+#tkmファイルを出力する
+#todo 重複した頂点バッファも違うものとして登録してしまっているので修正したい
 class TkExporter_OT_Tkm(bpy.types.Operator):
     #ID
     bl_idname = "tkexporter.tkm"
@@ -95,7 +100,9 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         return {'RUNNING_MODAL'}
   
     def build_vertex_and_index(self,mesh):
+        #頂点バッファ
         self.vertices = {}
+        #インデックスバッファ
         self.indices = []
 
         uv_layer = mesh.uv_layers.active.data
@@ -105,22 +112,11 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
 
         #ポリゴン回す
         for poly in mesh.polygons:
-            self.print_data("Polygon index: %d, length: %d" % (poly.index, poly.loop_total))
-            
             #ポリゴンが三角形なら
             if poly.loop_total == 3:
                 #loopを回す
                 for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
                     self.add_vertex_and_index(mesh, poly, uv_layer, loop_index)
-
-            #ポリゴンが四角形なら
-            if poly.loop_total == 4:
-                #loopを回す
-                for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total-1):
-                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index)
-                for loop_index in range(poly.loop_start + 2, poly.loop_start + poly.loop_total):
-                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index)
-                self.add_vertex_and_index(mesh, poly, uv_layer, poly.loop_start)
                     
     
     def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index):
@@ -148,52 +144,26 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         vertex.normal[2] = poly.normal[2]
         vertex.uv[0] = uv_layer[loop_index].uv[0]
         vertex.uv[1] = uv_layer[loop_index].uv[1]
-        self.print_data("vertex")
-        self.print_data("    index: %d" % vertex_index)
-        self.print_data("    position: %r" % vertex.position)
-        self.print_data("    normal: %r" % vertex.normal)
-        self.print_data("    UV: %r" % vertex.uv)
-        self.print_data("    bone_index %r" % [0,0,0,0])
-        self.print_data("    bone_weights %r" % [0.0,0.0,0.0,0.0])
         self.vertices[vertex_index] = vertex
 
+    def get_texture_filepath(self,mesh):
+        #テクスチャ
+        self.textures = {}
 
+        #マテリアルを取得
+        mat = mesh.materials[0]
+        #ノードツリーを取得
+        node_tree = mat.node_tree
+        #ノードの配列？を取得
+        nodes = node_tree.nodes
+        #ノードを回す。
+        for node in nodes:
+            #ラベル名がalbedoなら
+            if node.label == ALBEDO_TEXTURE:
+                #画像の絶対パスを入れる
+                self.textures[ALBEDO_TEXTURE] = node.image.filepath_from_user()
             
-
-    #invokeの後に呼ばれる関数
-    def execute(self, context):
-        #編集モードに切り替える
-        #bpy.ops.object.mode_set(mode='EDIT')
-        #オブジェクトモードに切り替える
-        bpy.ops.object.mode_set(mode='OBJECT')
-
-        #メッシュデータを取得
-        mesh = context.object.data
-
-        #メッシュデータ4つの配列
-        #mesh.vertices 3つの頂点
-        #mesh.edges 1つの辺
-        #mesh.loops 単一の頂点とエッジ
-        #mesh.polygons  ポリゴン(loopsへの参照)
-        self.print_data("ポリゴンの数は")
-        self.print_data(len(mesh.polygons))
-        self.print_data("頂点バッファの数は")
-        self.print_data(len(mesh.vertices))
-
-        self.build_vertex_and_index(mesh)
-
-        #struct.pac()
-        #バイトコードとして解釈する
-        #int                i
-        #unsignd int        I
-        #unsigned char      B(文字の長さとか)
-        #short              h
-        #unsigned short     H
-        #float              f
-        #文字列     .encode()+b"\0"(ヌル文字)
-
-        
-
+    def write_file(self):
         #ファイルオープン
         with open(self.filepath, "wb") as target:
             #tkmのバージョンを出力
@@ -221,8 +191,15 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
             #マテリアル情報を出力(アルベド、法線マップ、スペキュラ、リフレクション、屈折)
             #ファイル名を、文字列の長さと文字列をそれぞれ出力
             #アルベド
-            target.write(struct.pack("<I",5))
-            target.write("a.png".encode()+b"\0")
+            if ALBEDO_TEXTURE in self.textures:
+                texture_name = self.textures[ALBEDO_TEXTURE]
+                texture_name = texture_name.split("\\")
+                texture_name = texture_name[-1]
+                target.write(struct.pack("<I",len(texture_name)))
+                target.write(texture_name.encode()+b"\0")
+            else:
+                target.write(struct.pack("<I",0))
+            
             #法線、スペキュラ、リフレクション、屈折
             target.write(struct.pack("<I",0))
             target.write(struct.pack("<I",0))
@@ -256,11 +233,56 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
                     target.write(struct.pack("<H", index+1))
                 else:
                     target.write(struct.pack("<I", index+1))
-                self.print_data(index)
 
-            
+    def output_dds_texture(self):
+        self.print_data(os.getcwd())
+        cmd_file = "mk.bat"   #.batファイルへのパス
+        filepath = self.filepath
+        number = filepath.rfind('\\')
+        filepath = filepath[:number]
+        for i in self.textures:
+            command = cmd_file
+            command += " " + self.textures[i].replace('/', '\\')
+            command += " " + filepath.replace('/', '\\')
+            os.system(command)
 
-        print("pushed")
+    #invokeの後に呼ばれる関数
+    def execute(self, context):
+        #編集モードに切り替える
+        #bpy.ops.object.mode_set(mode='EDIT')
+        #オブジェクトモードに切り替える
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+        #メッシュデータを取得
+        mesh = context.object.data
+
+        #メッシュデータ4つの配列
+        #mesh.vertices 3つの頂点
+        #mesh.edges 1つの辺
+        #mesh.loops 単一の頂点とエッジ
+        #mesh.polygons  ポリゴン(loopsへの参照)
+        
+
+        #struct.pac()
+        #バイトコードとして解釈する
+        #int                i
+        #unsignd int        I
+        #unsigned char      B(文字の長さとか)
+        #short              h
+        #unsigned short     H
+        #float              f
+        #文字列     .encode()+b"\0"(ヌル文字)
+
+        #頂点バッファとインデックスバッファを構築
+        self.build_vertex_and_index(mesh)
+        #テクスチャのファイルパスを取得
+        self.get_texture_filepath(mesh)
+        #tkmファイル書き出し
+        self.write_file()
+        #ddsファイル作成
+        self.output_dds_texture()
+
+        
         return{'FINISHED'}
   
 #各クラスの配列
