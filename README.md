@@ -1,5 +1,8 @@
 # tkExporterForBlender
 
+# 最初に
+Takayama様、この場を借りてお礼申し上げます。
+
 # 更新履歴
  11/20&nbsp;&nbsp;ver.1.0.0
   <br>&nbsp;&nbsp;tkmファイルの出力、アルベドファイルの取得及びdds変換出力実装(単一メッシュ、単一マテリアルのみ対応)
