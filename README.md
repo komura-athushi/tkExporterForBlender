@@ -7,8 +7,11 @@ Takayama様、この場を借りてお礼申し上げます。
 <br>https://qiita.com/kenyoshi17/items/b93bbba6451e3c6017e5
 
 # 更新履歴
- 11/20&nbsp;&nbsp;ver.1.0.0
+ **11/20&nbsp;&nbsp;ver.1.0.0**
   <br>&nbsp;&nbsp;tkmファイルの出力、アルベドファイルの取得及びdds変換出力実装(単一メッシュ、単一マテリアル、ボーンなしのみ対応)
+<br>
+ **11/22&nbsp;&nbsp;ver.1.1.0**
+  <br>&nbsp;&nbsp;スキンウェイト・スキンインデックスも出力できるように(未検証)
      
 
 # 概要
