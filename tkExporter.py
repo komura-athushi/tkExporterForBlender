@@ -12,11 +12,11 @@ import mathutils
 #アドオン(スクリプト)の詳細？
 bl_info = {
     "name": "tkExporter",
-    #説明。
+    #説明。-
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 0, 0, 0),
+    "version": (1, 1, 0, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -32,7 +32,7 @@ class Vertex:
         self.position = [0.0,0.0,0.0]
         self.normal = [0.0,0.0,0.0]
         self.uv = [0.0,0.0]
-        self.bone_index = [0,0,0,0]
+        self.skin_indexs = [0,0,0,0]
         self.skin_weights = [0.0,0.0,0.0,0.0]
 
 #オブジェクトプロパティにパネルを追加する
@@ -117,7 +117,6 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
                 #loopを回す
                 for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
                     self.add_vertex_and_index(mesh, poly, uv_layer, loop_index)
-                    
     
     def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index):
         #頂点インデックスを取得
@@ -134,16 +133,29 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         #インデックスバッファにインデックスを追加
         self.indices.append(vertex_index)
         vertex = Vertex()
+        v = mesh.vertices[mesh.loops[loop_index].vertex_index]
                     
-        vertex_position = mesh.vertices[mesh.loops[loop_index].vertex_index].co
+        vertex_position = v.co
+        vertex_normal = v.normal
+
         vertex.position[0] = vertex_position[0]
         vertex.position[1] = vertex_position[1]
         vertex.position[2] = vertex_position[2]
-        vertex.normal[0] = poly.normal[0]
-        vertex.normal[1] = poly.normal[1]
-        vertex.normal[2] = poly.normal[2]
+        vertex.normal[0] = vertex_normal[0]
+        vertex.normal[1] = vertex_normal[1]
+        vertex.normal[2] = vertex_normal[2]
         vertex.uv[0] = uv_layer[loop_index].uv[0]
         vertex.uv[1] = uv_layer[loop_index].uv[1]
+
+        #スキンインデックスとスキンウェイト
+        for i in range(0,len(v.groups)):
+            #4つのスキン？までしか対応してません
+            if i > 3:
+                break
+            vg = v.groups[i]
+            vertex.skin_indexs[i] = vg.group
+            vertex.skin_weights[i] = vg.weight
+
         self.vertices[vertex_index] = vertex
 
     def get_texture_filepath(self,mesh):
@@ -220,8 +232,8 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
                 #ボーンウェイト
                 for vec in vertex.skin_weights:
                     target.write(struct.pack("f",vec))
-                #ボーンインデックス
-                for vec in vertex.bone_index:
+                #スキンインデックス
+                for vec in vertex.skin_indexs:
                     target.write(struct.pack("h",vec))
 
             #ポリゴン数を出力
@@ -235,6 +247,7 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
                     target.write(struct.pack("<I", index+1))
 
     def output_dds_texture(self):
+        self.print_data("カレンドディレクトリは")
         self.print_data(os.getcwd())
         cmd_file = "mk.bat"   #.batファイルへのパス
         filepath = self.filepath

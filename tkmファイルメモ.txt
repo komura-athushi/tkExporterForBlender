@@ -38,3 +38,9 @@
 
 複数のメッシュをtkmとして出力したい
 →それ用のパネルを追加する
+
+mesh.vertices
+→MeshVertexの配列
+
+各ポリゴンのマテリアル取得
+→mesh.polygons[0].material_index
