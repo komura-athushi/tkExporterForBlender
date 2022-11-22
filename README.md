@@ -2,6 +2,8 @@
 
 # 最初に
 Takayama様、この場を借りてお礼申し上げます。
+<br>大変参考にさせて頂きました。
+<br>https://qiita.com/kenyoshi17/items/b93bbba6451e3c6017e5
 
 # 更新履歴
  11/20&nbsp;&nbsp;ver.1.0.0
