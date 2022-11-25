@@ -25,13 +25,19 @@ Takayama様、この場を借りてお礼申し上げます。
 Blender3.3.1にて動作確認済みです。
 
 # インストール方法
-詳しくは「アドオン　インストール」
-<br>1.&nbsp;設定→プリファレンス
+
+<br>1.&nbsp;「右クリックで管理者として実行してね.bat」を右クリックで管理者として実行
+<br>![16](https://user-images.githubusercontent.com/44657623/203994330-492e4351-8184-4bb7-a836-181cefdffd92.png)
+<br>2.&nbsp;Blenderのaddonsフォルダに「tkExporter_sub」フォルダが出来ていることを確認
+<br>![17](https://user-images.githubusercontent.com/44657623/203994647-fb462026-15f4-464f-9bc6-c95630e195a8.png)
+<br>詳しくは「アドオン　インストール」
+<br>3.&nbsp;設定→プリファレンス
 <br>![1](https://user-images.githubusercontent.com/44657623/202902685-123d81df-5561-4e91-8251-205606a1d19d.png)
-<br>2.&nbsp;アドオン→インストール→tkExporter.py→アドオンをインストール
+<br>4.&nbsp;アドオン→インストール→tkExporter.py→アドオンをインストール
 <br>![2](https://user-images.githubusercontent.com/44657623/202902789-0c5857bb-2c65-4123-ba87-ccc682e84f0c.png)
-<br>3.&nbsp;tkExporterに✓
+<br>5.&nbsp;tkExporterに✓
 <br>![3](https://user-images.githubusercontent.com/44657623/202902856-b194fb85-ad2a-487b-91e9-c2de8b073ef0.png)
+
 
 # tkmファイル出力
 **三角形ポリゴンしか出力できません**
