@@ -18,6 +18,7 @@ sys.path += [addon_dirpath]
 
 import tkmExporter
 import tksExporter
+import tkaExporter
 
 #アドオン(スクリプト)の詳細？
 bl_info = {
@@ -26,7 +27,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 2, 0, 0),
+    "version": (1, 3, 0, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -46,6 +47,7 @@ class TkExporter_PT_Panel(bpy.types.Panel):
     def draw(self, context):
         self.layout.operator("tkexporter.tkm")
         self.layout.operator("tkexporter.skeleton")
+        self.layout.operator("tkExporter.animation")
 
 #tkmファイル出力
 class TkExporter_OT_Tkm(bpy.types.Operator):
@@ -152,11 +154,76 @@ class TkExporter_OT_Skeleton(bpy.types.Operator):
         self.print_data("Finished making skeleton file.")
         return{'FINISHED'}
 
+#アニメーション出力オペレーション
+class TkExporter_OT_Animation(bpy.types.Operator):
+    
+    bl_idname = "tkexporter.animation"
+    bl_label = "createAnimation"
+    
+    filename_ext = ".tka"
+
+    #ダイアログから受け取ったファイル名を入れておく変数(?)。
+    filepath : StringProperty(
+        name="Tka_FilePath",
+        description="Filepath used for exporting the file",
+        default = "untitled.tka",
+        maxlen=1024,
+        subtype='FILE_PATH',
+    )
+    
+    def print_data(self,message):
+        self.report({'INFO'}, str(message))
+
+    #ボタンを押すとexecuteの前に呼ばれる関数。
+    def invoke(self, context, event):
+        self.tka = tkaExporter.TkExporter_Animation()
+        armature = context.object
+
+        if self.tka.invoke(context, event) == False:
+            self.print_data("Please select Armature object, or The armature don't has animations")
+            return{'FINISHED'}
+
+        #デフォルトの文字列を設定する。
+        blend_filepath = context.blend_data.filepath
+        if not blend_filepath:
+            blend_filepath = "untitled"
+        else:
+            blend_filepath = os.path.splitext(blend_filepath)[0] + "_" + armature.animation_data.action.name
+
+        self.filepath = blend_filepath + self.filename_ext
+
+        #ファイルダイアログを開く。
+        #ダイアログが閉じたとき、execute()を呼んでくれるらしい。
+        context.window_manager.fileselect_add(self)
+        
+        return {'RUNNING_MODAL'}
+    
+    
+    #アニメーション出力をやる関数
+    def execute(self, context):
+        #エディットモードとポーズモードでボーンの並びが違うので
+        #エディットモード基準のインデックスを使うために名前のリストを作る
+        bpy.ops.object.mode_set(mode='EDIT')
+        bone_name_list = [b.name for b in context.object.data.edit_bones]
+        bpy.ops.object.mode_set(mode='POSE')
+        pose_bones = context.object.pose.bones
+        self.print_data(len(pose_bones))
+        self.print_data(len(bone_name_list))
+        self.tka.execute(context, self.filepath, bone_name_list, pose_bones)
+        
+        scene = context.scene
+        self.print_data(scene.frame_start)
+        self.print_data(scene.frame_end)
+        self.print_data("Finished making animation file.")
+        return {'FINISHED'}
+
+
 #各クラスの配列
 classes = {
     TkExporter_PT_Panel,
     TkExporter_OT_Tkm,
-    TkExporter_OT_Skeleton
+    TkExporter_OT_Skeleton,
+    TkExporter_OT_Animation
 }
 
 #クラスをblenderに追加していきます

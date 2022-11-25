@@ -22,6 +22,7 @@ class Vertex:
 
 #tkmファイルを出力する
 #todo 重複した頂点バッファも違うものとして登録してしまっているので修正したい
+#todo tkm最適化を行うようにする
 class TkExporter_Tkm():
     #tkmファイルのバージョン
     TKM_VERSION = 100
