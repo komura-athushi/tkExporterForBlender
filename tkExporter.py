@@ -27,7 +27,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 3, 0, 0),
+    "version": (1, 3, 1, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -207,13 +207,7 @@ class TkExporter_OT_Animation(bpy.types.Operator):
         bone_name_list = [b.name for b in context.object.data.edit_bones]
         bpy.ops.object.mode_set(mode='POSE')
         pose_bones = context.object.pose.bones
-        self.print_data(len(pose_bones))
-        self.print_data(len(bone_name_list))
         self.tka.execute(context, self.filepath, bone_name_list, pose_bones)
-        
-        scene = context.scene
-        self.print_data(scene.frame_start)
-        self.print_data(scene.frame_end)
         self.print_data("Finished making animation file.")
         return {'FINISHED'}
 
