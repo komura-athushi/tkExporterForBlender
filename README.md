@@ -19,7 +19,7 @@ Takayama様、この場を借りてお礼申し上げます。
  **11/25&nbsp;&nbsp;ver.1.3.0**
   <br>&nbsp;&nbsp;tkaファイル出力実装(動作要検証)
 <br>
- **11/25&nbsp;&nbsp;ver.1.3.1**
+ **11/27&nbsp;&nbsp;ver.1.3.1**
   <br>&nbsp;&nbsp;複数のマテリアルを割り当てられている単一メッシュのtkmファイル出力対応。
      
 
