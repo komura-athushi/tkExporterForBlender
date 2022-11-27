@@ -11,10 +11,13 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>&nbsp;&nbsp;tkmファイルの出力、アルベドファイルの取得及びdds変換出力実装(単一メッシュ、単一マテリアル、ボーンなしのみ対応)
 <br>
  **11/22&nbsp;&nbsp;ver.1.1.0**
-  <br>&nbsp;&nbsp;スキンウェイト・スキンインデックスも出力できるように(動作未検証)
+  <br>&nbsp;&nbsp;スキンウェイト・スキンインデックスも出力できるように(動作要検証)
 <br>
  **11/23&nbsp;&nbsp;ver.1.2.0**
-  <br>&nbsp;&nbsp;tksファイル出力実装(動作未検証)
+  <br>&nbsp;&nbsp;tksファイル出力実装(動作要検証)
+<br>
+ **11/25&nbsp;&nbsp;ver.1.3.0**
+  <br>&nbsp;&nbsp;tkaファイル出力実装(動作要検証)
      
 
 # 概要
@@ -22,13 +25,19 @@ Takayama様、この場を借りてお礼申し上げます。
 Blender3.3.1にて動作確認済みです。
 
 # インストール方法
-詳しくは「アドオン　インストール」
-<br>1.&nbsp;設定→プリファレンス
+
+<br>1.&nbsp;「右クリックで管理者として実行してね.bat」を右クリックで管理者として実行
+<br>![16](https://user-images.githubusercontent.com/44657623/203994330-492e4351-8184-4bb7-a836-181cefdffd92.png)
+<br>2.&nbsp;Blenderのaddonsフォルダに「tkExporter_sub」フォルダが出来ていることを確認
+<br>![17](https://user-images.githubusercontent.com/44657623/203994647-fb462026-15f4-464f-9bc6-c95630e195a8.png)
+<br>詳しくは「アドオン　インストール」
+<br>3.&nbsp;設定→プリファレンス
 <br>![1](https://user-images.githubusercontent.com/44657623/202902685-123d81df-5561-4e91-8251-205606a1d19d.png)
-<br>2.&nbsp;アドオン→インストール→tkExporter.py→アドオンをインストール
+<br>4.&nbsp;アドオン→インストール→tkExporter.py→アドオンをインストール
 <br>![2](https://user-images.githubusercontent.com/44657623/202902789-0c5857bb-2c65-4123-ba87-ccc682e84f0c.png)
-<br>3.&nbsp;tkExporterに✓
+<br>5.&nbsp;tkExporterに✓
 <br>![3](https://user-images.githubusercontent.com/44657623/202902856-b194fb85-ad2a-487b-91e9-c2de8b073ef0.png)
+
 
 # tkmファイル出力
 **三角形ポリゴンしか出力できません**
@@ -55,5 +64,19 @@ Blender3.3.1にて動作確認済みです。
 <br>![10](https://user-images.githubusercontent.com/44657623/203451565-507c5056-17e1-4b39-80ad-417ae7317715.png)
 <br>3.&nbsp;ファイルパスを指定してcreateSkeleton
 <br>![11](https://user-images.githubusercontent.com/44657623/203451713-518cb6a0-f277-4a95-99f7-0747a1510a28.png)
+
+# tkaファイル出力
+**タイムラインエディタで開始フレームと終了フレームを設定する。**
+<br>![12](https://user-images.githubusercontent.com/44657623/203992635-5fc5a1a0-d92a-4915-9ac9-344a36d1fa93.png)
+<br><br>
+1.&nbsp;tkaファイルに出力したい**アーマチュアオブジェクト**を選択
+<br>![13](https://user-images.githubusercontent.com/44657623/203992843-7e2b316f-40a3-4f0f-974f-850eff60562f.png)
+<br>2.&nbsp;オブジェクトプロパティ→TKExporter→createAnimation
+<br>![14](https://user-images.githubusercontent.com/44657623/203993009-3222df91-fef8-4d69-bea8-86a8572714c5.png)
+<br>3.&nbsp;ファイルパスを指定してcreateAnimation
+<br>![15](https://user-images.githubusercontent.com/44657623/203993199-7998066e-c22e-4429-84a6-b251e0681781.png)
+
+
+
 
 
