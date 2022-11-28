@@ -20,6 +20,11 @@ class Vertex:
         self.skin_indexs = [0,0,0,0]
         self.skin_weights = [0.0,0.0,0.0,0.0]
 
+class UVVertex:
+    def __init__(self):
+        self.index = 0
+        self.uv = [0.0,0.0]
+
 #tkmファイルを出力する
 #todo 重複した頂点バッファも違うものとして登録してしまっているので修正したい
 #todo tkm最適化を行うようにする
@@ -41,6 +46,10 @@ class TkExporter_Tkm():
 
         #インデックスバッファ
         self.indices = {}
+
+        #UV頂点バッファ
+        self.uv_vertices = {}
+
         #マテリアルの数だけ
         self.num_material = len(mesh.materials)
         for i in range(0,self.num_material):
@@ -48,6 +57,9 @@ class TkExporter_Tkm():
             print(i)
 
         uv_layer = mesh.uv_layers.active.data
+
+        #最大のインデックス
+        self.max_index = len(mesh.vertices)
 
         #ポリゴン回す
         for poly in mesh.polygons:
@@ -60,16 +72,47 @@ class TkExporter_Tkm():
     def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index):
         #頂点インデックスを取得
         vertex_index = mesh.loops[loop_index].vertex_index
+        #頂点バッファの番号
         vertex_index = int(vertex_index)
-        vertex_index = int(loop_index)
+        #vertex_index = int(loop_index)
+        #マテリアルID
         material_index = poly.material_index
-        '''
-        #既にインデックスバッファにインデックスが追加済みなら
-        if vertex_index in self.indices:
-            #インデックスバッファにインデックスだけ追加してスルー。
-            self.indices.append(vertex_index)
-            return
-        '''
+        
+        #UV座標
+        vertex_uv = [0.0,0.0]
+        vertex_uv[0] = uv_layer[loop_index].uv[0]
+        vertex_uv[1] = uv_layer[loop_index].uv[1]
+
+        #既にUV頂点バッファにインデックスが既に存在していたら
+        if vertex_index in self.uv_vertices:
+            for uv_vertex in self.uv_vertices[vertex_index]:
+                #UVが一致していたら
+                if vertex_uv[0] == uv_vertex.uv[0] and vertex_uv[1] == uv_vertex.uv[1]:
+                    #インデックスバッファにインデックスを追加して終わり
+                    self.indices[material_index].append(uv_vertex.index)
+                    return
+
+            #一致するUV頂点が存在しなければ
+            uv_vertex = UVVertex()
+            #最大インデックス値を設定
+            uv_vertex.index = self.max_index
+            uv_vertex.uv = vertex_uv
+            #UV頂点を追加
+            self.uv_vertices[vertex_index].append(uv_vertex)
+            #最大インデックスを+1
+            self.max_index += 1
+            #インデックスを設定
+            vertex_index = uv_vertex.index
+        #UV頂点バッファにインデックスが存在していなければ
+        else:
+            uv_vertex = UVVertex()
+            #頂点バッファのインデックスを設定
+            uv_vertex.index = vertex_index
+            uv_vertex.uv = vertex_uv
+            #新しく辞書にキーを追加
+            self.uv_vertices[vertex_index] = []
+            self.uv_vertices[vertex_index].append(uv_vertex)
+            
         print(material_index)
         #インデックスバッファにインデックスを追加
         self.indices[material_index].append(vertex_index)

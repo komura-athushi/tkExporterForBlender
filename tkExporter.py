@@ -27,7 +27,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 3, 1, 0),
+    "version": (1, 3, 2, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
