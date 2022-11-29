@@ -86,6 +86,14 @@ Blender3.3.1にて動作確認済みです。
 <br>3.&nbsp;ファイルパスを指定してcreateAnimation
 <br>![15](https://user-images.githubusercontent.com/44657623/203993199-7998066e-c22e-4429-84a6-b251e0681781.png)
 
+# tklファイル出力
+1.&nbsp;コレクションを選択。(コレクションを選択しない場合は、シーンコレクションを選択した扱いになって、すべてのオブジェクトが対象になります。)
+<br>![18](https://user-images.githubusercontent.com/44657623/204429635-0fc5d36d-19d7-43f9-9db3-342d4995b955.png)
+<br>2.&nbsp;オブジェクトプロパティ→TKExporter→createLevel
+<br>![19](https://user-images.githubusercontent.com/44657623/204430215-f301527c-8abc-47c6-bcd3-90f03ddc2bb6.png)
+<br>3.&nbsp;Delete name after the dot(オブジェクトの名前の.以下が無視されます)に✓を入れて、createLevel
+<br>![20](https://user-images.githubusercontent.com/44657623/204430196-2639f642-1b5f-48b3-9a03-eca593ba41bc.png)
+
 
 
 
