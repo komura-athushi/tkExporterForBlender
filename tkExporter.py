@@ -19,6 +19,7 @@ sys.path += [addon_dirpath]
 import tkmExporter
 import tksExporter
 import tkaExporter
+import tklExporter
 
 #アドオン(スクリプト)の詳細？
 bl_info = {
@@ -48,6 +49,7 @@ class TkExporter_PT_Panel(bpy.types.Panel):
         self.layout.operator("tkexporter.tkm")
         self.layout.operator("tkexporter.skeleton")
         self.layout.operator("tkExporter.animation")
+        self.layout.operator("tkExporter.level")
 
 #tkmファイル出力
 class TkExporter_OT_Tkm(bpy.types.Operator):
@@ -211,13 +213,69 @@ class TkExporter_OT_Animation(bpy.types.Operator):
         self.print_data("Finished making animation file.")
         return {'FINISHED'}
 
+#レベル出力オペレーション
+class TkExporter_OT_Level(bpy.types.Operator):
+
+    bl_idname = "tkexporter.level"
+    bl_label = "createLevel"
+    
+    filename_ext = ".tkl"
+
+    #ダイアログから受け取ったファイル名を入れておく変数(?)。
+    filepath : StringProperty(
+        name="Tkl_FilePath",
+        description="Filepath used for exporting the file",
+        default = "untitled.tkl",
+        maxlen=1024,
+        subtype='FILE_PATH',
+    )
+
+    #blenderは名前の重複を許さないので、出力時に任意で名前のドット(.)以下を削除します。
+    #ファイルダイアログが開いたときに左側にDelete name after the dot.というチェックボックスがあるので
+    #それにチェックを入れると削除が有効になります。
+    #例：Box.001 => Box
+    #    Box.0.1 => Box
+    #    Box_1.001 => Box_1
+    isDeleteDot : BoolProperty(
+        name="Delete name after the dot.",
+        description="If it's true, it delete name after the dot.",
+        default=False,
+    )
+
+    def print_data(self,message):
+        self.report({'INFO'}, str(message))
+
+    #ボタンを押すとexecuteの前に呼ばれる関数。
+    def invoke(self, context, event):
+        #デフォルトの文字列を設定する。
+        blend_filepath = context.blend_data.filepath
+        if not blend_filepath:
+            blend_filepath = "untitled"
+        else:
+            blend_filepath = os.path.splitext(blend_filepath)[0]
+
+        self.filepath = blend_filepath + self.filename_ext
+
+        #ファイルダイアログを開く。
+        #ダイアログが閉じたとき、execute()を呼んでくれるらしい。
+        context.window_manager.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+    
+    
+    #レベル出力をやる関数
+    def execute(self, context):
+        self.tkl = tklExporter.TkExporter_Level()
+        self.tkl.execute(context, self.filepath,self.isDeleteDot)
+        self.print_data("Finished making level file.")
+        return {'FINISHED'}
 
 #各クラスの配列
 classes = {
     TkExporter_PT_Panel,
     TkExporter_OT_Tkm,
     TkExporter_OT_Skeleton,
-    TkExporter_OT_Animation
+    TkExporter_OT_Animation,
+    TkExporter_OT_Level
 }
 
 #クラスをblenderに追加していきます
