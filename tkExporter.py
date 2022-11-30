@@ -28,7 +28,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 4, 0, 0),
+    "version": (1, 4, 1, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -69,14 +69,18 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         subtype='FILE_PATH',                                #サブタイプ
     )
 
+    isOutputAllMeshOnCollection : BoolProperty(
+        name="Output all mesh on Collection.",
+        description="If it's true, it Output all mesh on Collection.",
+        default=False,
+    )
+
     def print_data(self,message):
         self.report({'INFO'}, str(message))
 
     def invoke(self, context, event):
         self.tkm = tkmExporter.TkExporter_Tkm()
-        if self.tkm.invoke(context.object) == False:
-            self.print_data("Please select Mesh object!")
-            return {'FINISHED'}
+
         #デフォルトの文字列を設定する。
         blend_filepath = context.blend_data.filepath
         if not blend_filepath:
@@ -84,6 +88,7 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         else:
             blend_filepath = os.path.splitext(blend_filepath)[0]
         self.filepath = blend_filepath + self.filename_ext
+
         #ファイルダイアログを開く。
         #ダイアログが閉じたとき、execute()を呼んでくれるらしい。
         context.window_manager.fileselect_add(self)
@@ -96,9 +101,33 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         #bpy.ops.object.mode_set(mode='EDIT')
         #オブジェクトモードに切り替える
         bpy.ops.object.mode_set(mode='OBJECT')
+
+        self.meshs = []
+        #選択したメッシュオブジェクトをtkmとして出力する
+        if self.isOutputAllMeshOnCollection == False:
+            #選択されたオブジェクトがメッシュでなければ
+            if context.object.type != "MESH":
+                self.report({'INFO'}, "Please select Mesh object!")
+                return{'FINISHED'}
+            #メッシュなら
+            else:
+                self.meshs.append(context.object)
+        #Collection直下のメッシュオブジェクトをtkmとして出力する
+        else:
+            #コレクションを取得
+            collection = context.collection
+            #コレクションのオブジェクトを検索
+            for children in collection.all_objects:
+                #メッシュタイプなら
+                if children.type == "MESH":
+                    #配列に追加
+                    self.meshs.append(children)
+            if len(self.meshs) == 0:
+                self.report({'INFO'}, "There is no Mesh object!")
+                return{'FINISHED'}
+
         #メッシュデータを取得
-        mesh = context.object.data
-        self.tkm.execute(mesh,self.filepath)
+        self.tkm.execute(self.meshs,self.filepath)
         self.print_data("Finished making tkm file.")
         return {'FINISHED'}
 

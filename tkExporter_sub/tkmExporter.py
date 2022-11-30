@@ -25,28 +25,15 @@ class UVVertex:
         self.index = 0
         self.uv = [0.0,0.0]
 
-#tkmファイルを出力する
-#todo 重複した頂点バッファも違うものとして登録してしまっているので修正したい
-#todo tkm最適化を行うようにする
-class TkExporter_Tkm():
-    #tkmファイルのバージョン
-    TKM_VERSION = 100
-
-    #ボタンを押すとexecuteの前に呼ばれる関数。
-    def invoke(self, mesh):
-        #選択されたオブジェクトがMESH以外なら
-        #処理を終了させる
-        if mesh.type != "MESH":
-            return False
-        return True
-  
-    def build_vertex_and_index(self,mesh):
+class Mesh:
+    def __init__(self):
+        return
+    
+    def build_vertex_and_index(self,mesh,matrix_world):
         #頂点バッファ
         self.vertices = {}
-
         #インデックスバッファ
         self.indices = {}
-
         #UV頂点バッファ
         self.uv_vertices = {}
 
@@ -54,22 +41,18 @@ class TkExporter_Tkm():
         self.num_material = len(mesh.materials)
         for i in range(0,self.num_material):
             self.indices[i] = []
-            print(i)
-
         uv_layer = mesh.uv_layers.active.data
-
         #最大のインデックス
         self.max_index = len(mesh.vertices)
-
         #ポリゴン回す
         for poly in mesh.polygons:
             #ポリゴンが三角形なら
             if poly.loop_total == 3:
                 #loopを回す
                 for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
-                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index)
+                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index,matrix_world)
     
-    def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index):
+    def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index,matrix_world):
         #頂点インデックスを取得
         vertex_index = mesh.loops[loop_index].vertex_index
         #頂点バッファの番号
@@ -112,14 +95,15 @@ class TkExporter_Tkm():
             #新しく辞書にキーを追加
             self.uv_vertices[vertex_index] = []
             self.uv_vertices[vertex_index].append(uv_vertex)
-            
-        print(material_index)
+        
         #インデックスバッファにインデックスを追加
         self.indices[material_index].append(vertex_index)
         vertex = Vertex()
         v = mesh.vertices[mesh.loops[loop_index].vertex_index]
-                    
-        vertex_position = v.co
+
+        #頂点ローカル座標にワールド行列を適用
+        vertex_position = matrix_world @ v.co
+        #vertex_position = v.co
         vertex_normal = v.normal
 
         vertex.position[0] = vertex_position[0]
@@ -139,9 +123,11 @@ class TkExporter_Tkm():
             vg = v.groups[i]
             vertex.skin_indexs[i] = vg.group
             vertex.skin_weights[i] = vg.weight
+            print(vg.group)
+            print(vg.weight)
 
         self.vertices[vertex_index] = vertex
-
+    
     def get_texture_filepath(self,mesh):
         #テクスチャ
         self.textures = {}
@@ -160,6 +146,13 @@ class TkExporter_Tkm():
                     #画像の絶対パスを入れる
                     self.textures[index][ALBEDO_TEXTURE] = node.image.filepath_from_user()
             index += 1
+
+#tkmファイルを出力する
+#todo 重複した頂点バッファも違うものとして登録してしまっているので修正したい
+#todo tkm最適化を行うようにする
+class TkExporter_Tkm():
+    #tkmファイルのバージョン
+    TKM_VERSION = 100
             
     def write_file(self,filepath):
         #ファイルオープン
@@ -168,89 +161,93 @@ class TkExporter_Tkm():
             target.write( struct.pack("<B",  self.TKM_VERSION))
             #フラットシェーディング
             target.write(struct.pack("<B",0))
-            #メッシュパーツの数を出力(今は1で)
-            target.write(struct.pack("<H",1))
-            #マテリアルの数を出力(今は1で)
-            target.write(struct.pack("<I",self.num_material))
-            #頂点数を出力
-            target.write(struct.pack("<I",len(self.vertices)))
-            index_size = 2
-            #インデックスバッファのバイトサイズを出力
-            #インデックスバッファのサイズが65536より小さいなら2byte
-            for i in range(0,self.num_material):
-                if len(self.indices[i]) > 65536:
-                    index_size = 4
-            target.write(struct.pack("<B",index_size))
-            #パディング(0を3回出力)
-            target.write(struct.pack("<B",0))
-            target.write(struct.pack("<B",0))
-            target.write(struct.pack("<B",0))
-
-            #マテリアル情報を出力(アルベド、法線マップ、スペキュラ、リフレクション、屈折)
-            #ファイル名を、文字列の長さと文字列をそれぞれ出力
-            #アルベド
-            for i in range(0,self.num_material):
-                textures = self.textures[i]
-                if ALBEDO_TEXTURE in textures:
-                    texture_name = textures[ALBEDO_TEXTURE]
-                    texture_name = texture_name.split("\\")
-                    texture_name = texture_name[-1]
-                    target.write(struct.pack("<I",len(texture_name)))
-                    target.write(texture_name.encode()+b"\0")
-                else:
-                    target.write(struct.pack("<I",0))
+            #メッシュパーツの数を出力
+            target.write(struct.pack("<H",len(self.meshs)))
             
-                #法線、スペキュラ、リフレクション、屈折
-                target.write(struct.pack("<I",0))
-                target.write(struct.pack("<I",0))
-                target.write(struct.pack("<I",0))
-                target.write(struct.pack("<I",0))
+            for mesh in self.meshs:
+                #マテリアルの数を出力(今は1で)
+                target.write(struct.pack("<I",mesh.num_material))
+                #頂点数を出力
+                target.write(struct.pack("<I",len(mesh.vertices)))
+                index_size = 2
+                #インデックスバッファのバイトサイズを出力
+                #インデックスバッファのサイズが65536より小さいなら2byte
+                for i in range(0,mesh.num_material):
+                    if len(mesh.indices[i]) > 65536:
+                        index_size = 4
+                target.write(struct.pack("<B",index_size))
+                #パディング(0を3回出力)
+                target.write(struct.pack("<B",0))
+                target.write(struct.pack("<B",0))
+                target.write(struct.pack("<B",0))
 
-            #頂点バッファを出力
-            for i in range(0,len(self.vertices)):
-                vertex = self.vertices[i]
-                #座標
-                for vec in vertex.position:
-                    target.write(struct.pack("f",vec))
-                #法線
-                for vec in vertex.normal:
-                    target.write(struct.pack("f",vec))
-                #UV
-                for vec in vertex.uv:
-                    target.write(struct.pack("f",vec))
-                #ボーンウェイト
-                for vec in vertex.skin_weights:
-                    target.write(struct.pack("f",vec))
-                #スキンインデックス
-                for vec in vertex.skin_indexs:
-                    target.write(struct.pack("h",vec))
-
-            #各マテリアルごとのインデックスバッファを出力
-            for i in range(0,self.num_material):
-                indices = self.indices[i]
-                #ポリゴン数を出力
-                polygon_index = len(indices) / 3
-                target.write(struct.pack("<i", int(polygon_index)))
-                #インデックスバッファを出力(今は2byte)
-                for index in indices:
-                    if index_size == 2:
-                        target.write(struct.pack("<H", index+1))
+                #マテリアル情報を出力(アルベド、法線マップ、スペキュラ、リフレクション、屈折)
+                #ファイル名を、文字列の長さと文字列をそれぞれ出力
+                #アルベド
+                for i in range(0,mesh.num_material):
+                    textures = mesh.textures[i]
+                    if ALBEDO_TEXTURE in textures:
+                        texture_name = textures[ALBEDO_TEXTURE]
+                        texture_name = texture_name.split("\\")
+                        texture_name = texture_name[-1]
+                        target.write(struct.pack("<I",len(texture_name)))
+                        target.write(texture_name.encode()+b"\0")
                     else:
-                        target.write(struct.pack("<I", index+1))
+                        target.write(struct.pack("<I",0))
+            
+                    #法線、スペキュラ、リフレクション、屈折
+                    target.write(struct.pack("<I",0))
+                    target.write(struct.pack("<I",0))
+                    target.write(struct.pack("<I",0))
+                    target.write(struct.pack("<I",0))
+
+                #頂点バッファを出力
+                for i in range(0,len(mesh.vertices)):
+                    vertex = mesh.vertices[i]
+                    #座標
+                    for vec in vertex.position:
+                        target.write(struct.pack("f",vec))
+                    #法線
+                    for vec in vertex.normal:
+                        target.write(struct.pack("f",vec))
+                    #UV
+                    for vec in vertex.uv:
+                        target.write(struct.pack("f",vec))
+                    #ボーンウェイト
+                    for vec in vertex.skin_weights:
+                        target.write(struct.pack("f",vec))
+                    #スキンインデックス
+                    for vec in vertex.skin_indexs:
+                        target.write(struct.pack("h",vec))
+
+                #各マテリアルごとのインデックスバッファを出力
+                for i in range(0,mesh.num_material):
+                    indices = mesh.indices[i]
+                    #ポリゴン数を出力
+                    polygon_index = len(indices) / 3
+                    target.write(struct.pack("<i", int(polygon_index)))
+                    #インデックスバッファを出力(今は2byte)
+                    for index in indices:
+                        if index_size == 2:
+                            target.write(struct.pack("<H", index+1))
+                        else:
+                            target.write(struct.pack("<I", index+1))
 
     def output_dds_texture(self,filepath):
         cmd_file = "mk.bat"   #.batファイルへのパス
         number = filepath.rfind('\\')
         filepath = filepath[:number]
-        for textures in self.textures.values():
-            for i in textures:
-                command = cmd_file
-                command += " " + textures[i].replace('/', '\\')
-                command += " " + filepath.replace('/', '\\')
-                os.system(command)
+
+        for mesh in self.meshs:
+            for textures in mesh.textures.values():
+                for i in textures:
+                    command = cmd_file
+                    command += " " + textures[i].replace('/', '\\')
+                    command += " " + filepath.replace('/', '\\')
+                    os.system(command)
 
     #invokeの後に呼ばれる関数
-    def execute(self, mesh,filepath):
+    def execute(self, mesh_datas,filepath):
         #メッシュデータ4つの配列
         #mesh.vertices 3つの頂点
         #mesh.edges 1つの辺
@@ -268,10 +265,13 @@ class TkExporter_Tkm():
         #float              f
         #文字列     .encode()+b"\0"(ヌル文字)
 
-        #頂点バッファとインデックスバッファを構築
-        self.build_vertex_and_index(mesh)
-        #テクスチャのファイルパスを取得
-        self.get_texture_filepath(mesh)
+        self.meshs = []
+        for ms in mesh_datas:
+            mesh = Mesh()
+            mesh.build_vertex_and_index(ms.data,ms.matrix_world)
+            mesh.get_texture_filepath(ms.data)
+            self.meshs.append(mesh)
+
         #tkmファイル書き出し
         self.write_file(filepath)
         #ddsファイル作成
