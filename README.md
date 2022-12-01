@@ -28,7 +28,8 @@ Takayama様、この場を借りてお礼申し上げます。
  **11/29&nbsp;&nbsp;ver.1.4.0**
   <br>&nbsp;&nbsp;tklファイル出力実装(動作要検証)。
      <br>
- **11/29&nbsp;&nbsp;ver.1.4.1**
+ **11/30&nbsp;&nbsp;ver.1.5.0**
+　<br>&nbsp;&nbsp;Collection内にある全てのMeshを1つのtkmファイルとして出力できるように。
   <br>&nbsp;&nbsp;tkmファイル出力時に、各頂点座標にワールド行列を乗算するようにした(これでいいのかは分からない)。
      
 
@@ -62,13 +63,15 @@ Blender3.3.1にて動作確認済みです。
 **アルベドテクスチャのdds変換出力を行いたい場合は、makefile、mk.bat、texconv.exeファイルをblender.exeがあるフォルダにコピーしてください。**
 <br>![5](https://user-images.githubusercontent.com/44657623/202903461-e0485e01-c978-42fa-910a-a77068ee66f0.png)
 <br><br>
-1.&nbsp;tkmファイルに出力したい**メッシュオブジェクト**を選択
+1.&nbsp;tkmファイルに出力したい**メッシュオブジェクト**を選択or**Collection**を選択
 <br>![6](https://user-images.githubusercontent.com/44657623/202903646-7edabb2d-8976-4bb3-a3e3-8ddec51cb3ed.png)
+<br>![21](https://user-images.githubusercontent.com/44657623/204788193-7d41ea03-761b-4f4d-9ab6-1c043efd62d7.png)
+
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createTkm
 <br>![7](https://user-images.githubusercontent.com/44657623/202903877-d500505a-b454-425c-9c36-96f8e9995bac.png)
 <br>3.&nbsp;ファイルパスを指定して、createTkm
-<br>![8](https://user-images.githubusercontent.com/44657623/202904033-0e1a9589-85ff-4f5c-a03a-8b6a0a32aebb.png)
-
+<br>(Output all mesh on Collectionに✓を入れると、選択したCollection上に存在する全てのMeshを対象にtkmファイルを出力します、✓を入れなければ選択したMeshオブジェクトをtkmファイルとして出力します)
+<br>![23](https://user-images.githubusercontent.com/44657623/204789146-f12b44d2-7cae-4537-b80e-cc32da0b4f10.png)
 # tksファイル出力
 1.&nbsp;tksファイルに出力したい**アーマチュアオブジェクト**を選択
 <br>![9](https://user-images.githubusercontent.com/44657623/203451472-adcddb27-0e22-4bcd-9b22-aa4f2256857c.png)
