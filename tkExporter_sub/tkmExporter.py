@@ -29,7 +29,7 @@ class Mesh:
     def __init__(self):
         return
     
-    def build_vertex_and_index(self,mesh,matrix_world):
+    def build_vertex_and_index(self,mesh,matrix_world,bones):
         #頂点バッファ
         self.vertices = {}
         #インデックスバッファ
@@ -37,24 +37,30 @@ class Mesh:
         #UV頂点バッファ
         self.uv_vertices = {}
 
+        vertex_groups = mesh.vertex_groups
+        for vg in vertex_groups:
+            print(vg.name)
+            print(vg.index)
+        print(vertex_groups[0])
+
         #マテリアルの数だけ
-        self.num_material = len(mesh.materials)
+        self.num_material = len(mesh.data.materials)
         for i in range(0,self.num_material):
             self.indices[i] = []
-        uv_layer = mesh.uv_layers.active.data
+        uv_layer = mesh.data.uv_layers.active.data
         #最大のインデックス
-        self.max_index = len(mesh.vertices)
+        self.max_index = len(mesh.data.vertices)
         #ポリゴン回す
-        for poly in mesh.polygons:
+        for poly in mesh.data.polygons:
             #ポリゴンが三角形なら
             if poly.loop_total == 3:
                 #loopを回す
                 for loop_index in range(poly.loop_start, poly.loop_start + poly.loop_total):
-                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index,matrix_world)
+                    self.add_vertex_and_index(mesh, poly, uv_layer, loop_index,matrix_world,bones)
     
-    def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index,matrix_world):
+    def add_vertex_and_index(self,mesh,poly,uv_layer,loop_index,matrix_world,bones):
         #頂点インデックスを取得
-        vertex_index = mesh.loops[loop_index].vertex_index
+        vertex_index = mesh.data.loops[loop_index].vertex_index
         #頂点バッファの番号
         vertex_index = int(vertex_index)
         #vertex_index = int(loop_index)
@@ -99,7 +105,7 @@ class Mesh:
         #インデックスバッファにインデックスを追加
         self.indices[material_index].append(vertex_index)
         vertex = Vertex()
-        v = mesh.vertices[mesh.loops[loop_index].vertex_index]
+        v = mesh.data.vertices[mesh.data.loops[loop_index].vertex_index]
 
         #頂点ローカル座標にワールド行列を適用
         vertex_position = matrix_world @ v.co
@@ -115,16 +121,19 @@ class Mesh:
         vertex.uv[0] = uv_layer[loop_index].uv[0]
         vertex.uv[1] = uv_layer[loop_index].uv[1]
 
-        #スキンインデックスとスキンウェイト
-        for i in range(0,len(v.groups)):
-            #4つのスキン？までしか対応してません
-            if i > 3:
-                break
-            vg = v.groups[i]
-            vertex.skin_indexs[i] = vg.group
-            vertex.skin_weights[i] = vg.weight
-            print(vg.group)
-            print(vg.weight)
+        if len(bones) != 0:
+            #スキンインデックスとスキンウェイト
+            for i in range(0,len(v.groups)):
+                #4つのスキン？までしか対応してません
+                if i > 3:
+                    break
+                vge = v.groups[i]
+                vertex_groups = mesh.vertex_groups
+                for vg in vertex_groups:
+                    if vg.index == vge.group:
+                        vertex.skin_indexs[i] = bones[vg.name]
+                        vertex.skin_weights[i] = vge.weight
+            
 
         self.vertices[vertex_index] = vertex
     
@@ -133,7 +142,7 @@ class Mesh:
         self.textures = {}
 
         index = 0
-        for mat in mesh.materials:
+        for mat in mesh.data.materials:
             self.textures[index] = {}
             #ノードツリーを取得
             node_tree = mat.node_tree
@@ -247,7 +256,7 @@ class TkExporter_Tkm():
                     os.system(command)
 
     #invokeの後に呼ばれる関数
-    def execute(self, mesh_datas,filepath):
+    def execute(self, mesh_datas,filepath,bones):
         #メッシュデータ4つの配列
         #mesh.vertices 3つの頂点
         #mesh.edges 1つの辺
@@ -268,8 +277,8 @@ class TkExporter_Tkm():
         self.meshs = []
         for ms in mesh_datas:
             mesh = Mesh()
-            mesh.build_vertex_and_index(ms.data,ms.matrix_world)
-            mesh.get_texture_filepath(ms.data)
+            mesh.build_vertex_and_index(ms,ms.matrix_world,bones)
+            mesh.get_texture_filepath(ms)
             self.meshs.append(mesh)
 
         #tkmファイル書き出し

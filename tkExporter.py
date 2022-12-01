@@ -28,7 +28,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 5, 0, 0),
+    "version": (1, 5, 1, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -103,6 +103,9 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         bpy.ops.object.mode_set(mode='OBJECT')
 
         self.meshs = []
+        self.armature = None
+        self.bones = {}
+
         #選択したメッシュオブジェクトをtkmとして出力する
         if self.isOutputAllMeshOnCollection == False:
             #選択されたオブジェクトがメッシュでなければ
@@ -126,8 +129,40 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
                 self.report({'INFO'}, "There is no Mesh object!")
                 return{'FINISHED'}
 
-        #メッシュデータを取得
-        self.tkm.execute(self.meshs,self.filepath)
+
+        #コレクションを取得
+        collection = context.collection
+        #コレクションのオブジェクトを検索
+        for children in collection.all_objects:
+            #アーマチュアタイプなら
+            if children.type == "ARMATURE":
+                self.armature = children
+
+        #アーマチュアが見つからなければ
+        if self.armature == None:
+            self.tkm.execute(self.meshs,self.filepath,self.bones)
+            self.print_data("Finished making tkm file.")
+            return {'FINISHED'}
+
+        # 他のオブジェクトに操作を適用しないよう全てのオブジェクトを走査する
+        for ob in bpy.context.scene.objects:
+            # 非選択状態に設定する
+            ob.select_set(False)
+
+        selectob = bpy.data.objects.get(self.armature.name)
+        # 変更オブジェクトをアクティブに変更する
+        bpy.context.view_layer.objects.active = selectob
+        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        edit_bones = list(self.armature.data.edit_bones)
+        bone_number = 0
+        for bone in edit_bones: 
+            #ボーンの名前をキー、番号を値とする辞書を作成
+            self.bones[bone.name] = bone_number
+            bone_number += 1
+        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+
+        #tkmファイル出力
+        self.tkm.execute(self.meshs,self.filepath,self.bones)
         self.print_data("Finished making tkm file.")
         return {'FINISHED'}
 
