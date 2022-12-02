@@ -28,7 +28,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 5, 1, 0),
+    "version": (1, 5, 2, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -215,8 +215,6 @@ class TkExporter_OT_Skeleton(bpy.types.Operator):
         arm = context.object.data
         con = context
         self.tks.execute(arm, self.filepath,context.object.matrix_world)
-    
-        #self.tks.execute(armature=arm, filepath=self.filepath, world_matrix=context.object.matrix_world)
         self.print_data("Finished making skeleton file.")
         return{'FINISHED'}
 

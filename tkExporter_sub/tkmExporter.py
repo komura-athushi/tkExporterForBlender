@@ -9,8 +9,7 @@ from bpy.props import StringProperty
 from bpy.props import BoolProperty
 import mathutils
 
-
-ALBEDO_TEXTURE = "albedo"
+TEXTURE_NAMES = ["albedo","normal","specular","reflection","refraction"]
 
 class Vertex:
     def __init__(self):
@@ -36,12 +35,6 @@ class Mesh:
         self.indices = {}
         #UV頂点バッファ
         self.uv_vertices = {}
-
-        vertex_groups = mesh.vertex_groups
-        for vg in vertex_groups:
-            print(vg.name)
-            print(vg.index)
-        print(vertex_groups[0])
 
         #マテリアルの数だけ
         self.num_material = len(mesh.data.materials)
@@ -128,9 +121,13 @@ class Mesh:
                 if i > 3:
                     break
                 vge = v.groups[i]
+                #メッシュが保持している頂点グループを取得
                 vertex_groups = mesh.vertex_groups
                 for vg in vertex_groups:
+                    #頂点データが保持する頂点グループとメッシュが保持している頂点グループの
+                    #インデックスが同じなら
                     if vg.index == vge.group:
+                        #頂点グループの名前から、ボーンインデックスを取得
                         vertex.skin_indexs[i] = bones[vg.name]
                         vertex.skin_weights[i] = vge.weight
             
@@ -150,10 +147,11 @@ class Mesh:
             nodes = node_tree.nodes
             #ノードを回す。
             for node in nodes:
-                #ラベル名がalbedoなら
-                if node.label == ALBEDO_TEXTURE:
-                    #画像の絶対パスを入れる
-                    self.textures[index][ALBEDO_TEXTURE] = node.image.filepath_from_user()
+                for TEXTURE_NAME in TEXTURE_NAMES:
+                 #ラベル名が各テクスチャの名前に一致したら
+                    if node.label == TEXTURE_NAME:
+                        #画像の絶対パスを入れる
+                        self.textures[index][TEXTURE_NAME] = node.image.filepath_from_user()
             index += 1
 
 #tkmファイルを出力する
@@ -192,23 +190,17 @@ class TkExporter_Tkm():
 
                 #マテリアル情報を出力(アルベド、法線マップ、スペキュラ、リフレクション、屈折)
                 #ファイル名を、文字列の長さと文字列をそれぞれ出力
-                #アルベド
                 for i in range(0,mesh.num_material):
                     textures = mesh.textures[i]
-                    if ALBEDO_TEXTURE in textures:
-                        texture_name = textures[ALBEDO_TEXTURE]
-                        texture_name = texture_name.split("\\")
-                        texture_name = texture_name[-1]
-                        target.write(struct.pack("<I",len(texture_name)))
-                        target.write(texture_name.encode()+b"\0")
-                    else:
-                        target.write(struct.pack("<I",0))
-            
-                    #法線、スペキュラ、リフレクション、屈折
-                    target.write(struct.pack("<I",0))
-                    target.write(struct.pack("<I",0))
-                    target.write(struct.pack("<I",0))
-                    target.write(struct.pack("<I",0))
+                    for TEXTURE_NAME in TEXTURE_NAMES:
+                        if TEXTURE_NAME in textures:
+                            texture_name = textures[TEXTURE_NAME]
+                            texture_name = texture_name.split("\\")
+                            texture_name = texture_name[-1]
+                            target.write(struct.pack("<I",len(texture_name)))
+                            target.write(texture_name.encode()+b"\0")
+                        else:
+                            target.write(struct.pack("<I",0))
 
                 #頂点バッファを出力
                 for i in range(0,len(mesh.vertices)):
