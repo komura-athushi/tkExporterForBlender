@@ -34,6 +34,9 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>
  **12/1&nbsp;&nbsp;ver.1.5.1**
 　<br>&nbsp;&nbsp;tkmファイル出力時の、頂点データのスキンインデックスの値を修正。
+  <br>
+ **12/2&nbsp;&nbsp;ver.1.5.2**
+　<br>&nbsp;&nbsp;tkmファイル出力時、アルベド以外のテクスチャも設定可能に。
      
 
 # 概要
@@ -60,7 +63,7 @@ Blender3.3.1にて動作確認済みです。
 <br>四角形→三角形にする方法はこちらを参照
 <br>https://www.matatabi-ux.com/entry/2019/09/05/100000
 <br><br>
-**シェーダーエディターで、アルベドテクスチャのラベル名をalbedoに設定してください。**
+**シェーダーエディターで、**アルベドマップのラベル名をalbedo**、**法線マップのラベル名をnormal**、**スペキュラマップのラベル名をspecular**、**リフレクションマップのラベル名をreflection**、**屈折マップのラベル名をrefraction**に設定してください。**
 <br>![4](https://user-images.githubusercontent.com/44657623/202903175-8986e331-61f4-4f9b-98ea-b3214c57adc8.png)
 <br><br>
 **アルベドテクスチャのdds変換出力を行いたい場合は、makefile、mk.bat、texconv.exeファイルをblender.exeがあるフォルダにコピーしてください。**
@@ -73,7 +76,7 @@ Blender3.3.1にて動作確認済みです。
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createTkm
 <br>![7](https://user-images.githubusercontent.com/44657623/202903877-d500505a-b454-425c-9c36-96f8e9995bac.png)
 <br>3.&nbsp;ファイルパスを指定して、createTkm
-<br>(Output all mesh on Collectionに✓を入れると、選択したCollection上に存在する全てのMeshを対象にtkmファイルを出力します、✓を入れなければ選択したMeshオブジェクトをtkmファイルとして出力します)
+<br>(Output all mesh on Collectionに✓を入れると、**選択したCollection上に存在する全てのMesh**を対象にtkmファイルを出力します、✓を入れなければ**選択したMeshオブジェクト**をtkmファイルとして出力します)
 <br>![23](https://user-images.githubusercontent.com/44657623/204789146-f12b44d2-7cae-4537-b80e-cc32da0b4f10.png)
 # tksファイル出力
 1.&nbsp;tksファイルに出力したい**アーマチュアオブジェクト**を選択
