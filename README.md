@@ -76,7 +76,7 @@ Blender3.3.1にて動作確認済みです。
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createTkm
 <br>![7](https://user-images.githubusercontent.com/44657623/202903877-d500505a-b454-425c-9c36-96f8e9995bac.png)
 <br>3.&nbsp;ファイルパスを指定して、createTkm
-<br>(Output all mesh on Collectionに✓を入れると、**選択したCollection上に存在する全てのMesh**を対象にtkmファイルを出力します、✓を入れなければ**選択したMeshオブジェクト**をtkmファイルとして出力します)
+<br>(Output all mesh on Collectionに✓を入れると、**選択したCollection上に存在する全てのMesh**を対象にtkmファイルを出力します、✓を入れなければ**選択したMeshオブジェクト(1つ)**をtkmファイルとして出力します)
 <br>![23](https://user-images.githubusercontent.com/44657623/204789146-f12b44d2-7cae-4537-b80e-cc32da0b4f10.png)
 # tksファイル出力
 1.&nbsp;tksファイルに出力したい**アーマチュアオブジェクト**を選択
