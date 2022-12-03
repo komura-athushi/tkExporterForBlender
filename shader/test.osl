@@ -1,12 +1,198 @@
-shader simple_material(
-    color Diffuse_Color = color(0.6, 0.8, 0.6),
-    float Noise_Factor = 0.5,
-    normal n = N,
-    //output closure color BSDF = diffuse(N)
-    output color BSDF = color(0.0,0.0,0.0)
+
+float lerp(float a, float b, float x)
+{
+  return a + x * (b - a);
+}
+
+vector lerp_vector(vector a,vector b,vector x)
+{
+    return a + x * (b - a);
+}
+
+// ベックマン分布を計算する
+float Beckmann(float m, float t)
+{
+    float t2 = t * t;
+    float t4 = t * t * t * t;
+    float m2 = m * m;
+    float D = 1.0 / (4.0 * m2 * t4);
+    D *= exp((-1.0 / m2) * (1.0-t2)/ t2);
+    return D;
+}
+
+// フレネルを計算。Schlick近似を使用
+float SpcFresnel(float f0, float u0)
+{
+    // from Schlick
+    return f0 + (1-f0) * pow(1-u0, 5);
+}
+
+/// <summary>
+/// クックトランスモデルの鏡面反射を計算
+/// </summary>
+/// <param name="L">光源に向かうベクトル</param>
+/// <param name="V">視点に向かうベクトル</param>
+/// <param name="N">法線ベクトル</param>
+/// <param name="smooth">滑らかさ</param>
+float CookTorranceSpecular(vector L, vector V, vector n, float smooth)
+{
+    float microface = 1.0 - smooth;
+
+    // 金属度を垂直入射の時のフレネル反射率として扱う
+    // 金属度が高いほどフレネル反射は大きくなる
+    float f0 = smooth;
+
+    // ライトに向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
+    vector H = normalize(L + V);
+
+    // 各種ベクトルがどれくらい似ているかを内積を利用して求める
+    float NdotH = max( clamp((dot(n, H)),0.0,1.0), 0.001 );
+    float VdotH = max( clamp((dot(V, H)),0.0,1.0), 0.001 );
+    float NdotL = max( clamp((dot(n, L)),0.0,1.0), 0.001 );
+    float NdotV = max( clamp((dot(n, V)),0.0,1.0), 0.001 );
+
+    // D項をベックマン分布を用いて計算する
+    float D = Beckmann(microface, NdotH);
+
+    // F項をSchlick近似を用いて計算する
+    float F = SpcFresnel(f0, VdotH);
+
+    // G項を求める
+    float G = min(1.0, min(2*NdotH*NdotV/VdotH, 2*NdotH*NdotL/VdotH));
+
+    // m項を求める
+    float m = M_PI * NdotV * NdotH;
+
+    // ここまで求めた、値を利用して、クックトランスモデルの鏡面反射を求める
+    return max(F * D * G / m, 0.0);
+}
+
+/// <summary>
+/// フレネル反射を考慮した拡散反射を計算
+/// </summary>
+/// <remark>
+/// この関数はフレネル反射を考慮した拡散反射率を計算します
+/// フレネル反射は、光が物体の表面で反射する現象のとこで、鏡面反射の強さになります
+/// 一方拡散反射は、光が物体の内部に入って、内部錯乱を起こして、拡散して反射してきた光のことです
+/// つまりフレネル反射が弱いときには、拡散反射が大きくなり、フレネル反射が強いときは、拡散反射が小さくなります
+///
+/// </remark>
+/// <param name="N">法線</param>
+/// <param name="L">光源に向かうベクトル。光の方向と逆向きのベクトル。</param>
+/// <param name="V">視線に向かうベクトル。</param>
+/// <param name="roughness">粗さ。0～1の範囲。</param>
+float CalcDiffuseFromFresnel(vector n, vector L, vector V, float smooth)
+{
+    // step-1 ディズニーベースのフレネル反射による拡散反射を真面目に実装する。
+    // 光源に向かうベクトルと視線に向かうベクトルのハーフベクトルを求める
+    vector H = normalize(L+V);
+    
+    //粗さは0.5で固定。
+    float roughness = 1.0 - smooth;
+    
+    //これは
+    float energyBias = lerp(0.0, 0.5, roughness);
+    float energyFactor = lerp(1.0, 1.0/1.51, roughness);
+
+    // 光源に向かうベクトルとハーフベクトルがどれだけ似ているかを内積で求める
+    float dotLH = clamp(dot(L,H),0.0,1.0);
+    // 光源に向かうベクトルとハーフベクトル、光が平行に入射したときの拡散反射量を求めている。
+    float Fd90 = energyBias + 2.0 * dotLH * dotLH * roughness;
+    
+    // 法線と光源に向かうベクトルｗを利用して拡散反射率を求めています
+    float dotNL = clamp(dot(n,L),0.0,1.0);
+    float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
+
+    
+    // 法線と視点に向かうベクトルを利用して拡散反射率を求めています
+    float dotNV = clamp(dot(n,V),0.0,1.0);
+    float FV =  (1 + (Fd90 - 1) * pow(1 - dotNV, 5));
+
+    //法線と光源への方向に依存する拡散反射率と、法線と視点ベクトルに依存する拡散反射率を
+    // 乗算して最終的な拡散反射率を求めている。PIで除算しているのは正規化を行うため
+    return (FL*FV * energyFactor);
+}
+
+// 反射光を計算する。
+color CalcLighting(
+    vector ligDir, 
+    vector ligColor, 
+    normal n,
+    vector toEye, 
+    color albedoColor,  
+    float metaric, 
+    float smooth, 
+    color specColor
     )
 {
-    color material_color = Diffuse_Color;
-    //BSDF = material_color * diffuse(N);
-    BSDF = material_color;
+     // 影が落ちていないのでライトの計算を行う。
+    // ディズニーベースの拡散反射を実装する
+    // フレネル反射を考慮した拡散反射を計算
+    float diffuseFromFresnel = CalcDiffuseFromFresnel(
+        n, -ligDir, toEye, smooth);
+
+    // 正規化Lambert拡散反射を求める
+    float NdotL = clamp(dot(n, -ligDir),0.0,1.0);
+    vector lambertDiffuse = ligColor * NdotL / M_PI;
+
+    // 最終的な拡散反射光を計算する
+    vector diffuse = albedoColor * diffuseFromFresnel * lambertDiffuse;
+
+    // クックトランスモデルを利用した鏡面反射率を計算する
+    // クックトランスモデルの鏡面反射率を計算する
+    vector spec = CookTorranceSpecular(
+        -ligDir, toEye, n, smooth)
+        * ligColor;
+
+    // 金属度が高ければ、鏡面反射はスペキュラカラー、低ければ白
+    // スペキュラカラーの強さを鏡面反射率として扱う
+
+    spec *= lerp_vector(color(1.0, 1.0, 1.0), specColor, metaric);
+
+    // 滑らかさを使って、拡散反射光と鏡面反射光を合成する
+    return max( vector( 0.0, 0.0, 0.0 ), diffuse * (1.0 - smooth) + spec * smooth );
+    //return spec;
+}
+
+
+
+shader simple_material(
+    //アルベドテクスチャ
+    color albedo_map = color(0.0, 0.0, 0.0),
+    //法線
+    normal normal_map = N,
+    //メタリック
+    color metallic_map = color(0.0,0.0,0.0),
+    //スムース
+    float smooth_map = 0.0,
+    //ワールド座標
+    vector world_pos = vector(0.0,0.0,0.0),
+    //カメラ座標
+    vector camera_vector = vector(0.0,0.0,0.0),
+    //ライトの色
+    vector light_color = vector(1.2,1.2,1.2),
+    //ライトの方向
+    vector light_direction = vector(0.57735,-0.57735,-0.57735),
+    //環境光
+    vector ambient_light = vector(0.5,0.5,0.5),
+    //最終的な色
+    output color final_color  = color(0.0,0.0,0.0)
+    )
+{
+    vector to_eye = normalize(camera_vector-world_pos);
+    vector light_dir = normalize(light_direction);
+
+    final_color = CalcLighting(
+        light_dir,
+        light_color,
+        normal_map,
+        to_eye,
+        albedo_map,
+        metallic_map.r,
+        smooth_map,
+        albedo_map
+    );
+
+    final_color += albedo_map * ambient_light;
+    //final_color = to_eye;
 }
