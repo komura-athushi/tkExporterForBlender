@@ -74,6 +74,9 @@ Blender3.3.1にて動作確認済みです。
 <br>5.&nbsp;以下のようにノードを繋いでください。
 <br>![28](https://user-images.githubusercontent.com/44657623/205443023-45965278-8fdc-4beb-82d8-2d5fffafdd4f.png)
 <br>![29](https://user-images.githubusercontent.com/44657623/205443032-8f066e4d-bed4-415b-843e-30bb202fce7f.png)
+<br>6.&nbsp;シェーディングを「**レンダー**」に
+<br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
+
 
 
 
