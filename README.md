@@ -39,7 +39,7 @@ Takayama様、この場を借りてお礼申し上げます。
 　<br>&nbsp;&nbsp;tkmファイル出力時、アルベド以外のテクスチャも設定可能に。
   <br>
  **12/3&nbsp;&nbsp;ver.1.6.0**
-　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加。
+　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加(**要検証**)。
 
 # 概要
 非公式Blender版tkExporterです。
