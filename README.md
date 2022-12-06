@@ -76,6 +76,9 @@ Blender3.3.1にて動作確認済みです。
 <br>![29](https://user-images.githubusercontent.com/44657623/205443032-8f066e4d-bed4-415b-843e-30bb202fce7f.png)
 <br>6.&nbsp;シェーディングを「**レンダー**」に
 <br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
+<br>各パラメータを弄れば、以下のようにモデルが光ります。
+<br>![31](https://user-images.githubusercontent.com/44657623/205804606-3f8c0380-4fe5-4607-9801-629cb0ff1a5e.png)
+
 
 
 
