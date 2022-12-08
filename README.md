@@ -37,7 +37,9 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>
  **12/2&nbsp;&nbsp;ver.1.5.2**
 　<br>&nbsp;&nbsp;tkmファイル出力時、アルベド以外のテクスチャも設定可能に。
-     
+  <br>
+ **12/3&nbsp;&nbsp;ver.1.6.0**
+　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加(**要検証**)。
 
 # 概要
 非公式Blender版tkExporterです。
@@ -56,6 +58,32 @@ Blender3.3.1にて動作確認済みです。
 <br>![2](https://user-images.githubusercontent.com/44657623/202902789-0c5857bb-2c65-4123-ba87-ccc682e84f0c.png)
 <br>5.&nbsp;tkExporterに✓
 <br>![3](https://user-images.githubusercontent.com/44657623/202902856-b194fb85-ad2a-487b-91e9-c2de8b073ef0.png)
+
+# OSL(OpenShadingLanguage)の使用方法
+<br>**OSLとは**
+<br>→Blenderで使用可能なシェーディング言語です。
+<br>
+<br>1.&nbsp;レンダープロパティ→レンダーエンジンを「**Cycles**」→デバイスを「**CPU**」→**Open Shading Languageに✓**
+<br>![24](https://user-images.githubusercontent.com/44657623/205442630-01441c30-aa76-4044-86b0-1019678dea35.png)
+<br>2.&nbsp;シェーダーエディター→追加→スクリプト→スクリプト
+<br>![25](https://user-images.githubusercontent.com/44657623/205442717-89e4a108-8253-44e9-b1dc-3377c10aa947.png)
+<br>3.&nbsp;外部→ファイルブラウザを開く
+<br>![26](https://user-images.githubusercontent.com/44657623/205442757-adf811b9-a7b0-4757-af11-a9cc2150d533.png)
+<br>4.&nbsp;tkExporterForBlender/shader/test.oslを選択
+<br>![27](https://user-images.githubusercontent.com/44657623/205442801-8629d1df-0066-451d-9d7a-830f2ea637d4.png)
+<br>5.&nbsp;以下のようにノードを繋いでください。
+<br>![28](https://user-images.githubusercontent.com/44657623/205443023-45965278-8fdc-4beb-82d8-2d5fffafdd4f.png)
+<br>![29](https://user-images.githubusercontent.com/44657623/205443032-8f066e4d-bed4-415b-843e-30bb202fce7f.png)
+<br>6.&nbsp;シェーディングを「**レンダー**」に
+<br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
+<br>各パラメータを弄れば、以下のようにモデルが光ります。
+<br>![31](https://user-images.githubusercontent.com/44657623/205804606-3f8c0380-4fe5-4607-9801-629cb0ff1a5e.png)
+
+
+
+
+
+
 
 
 # tkmファイル出力
@@ -98,8 +126,12 @@ Blender3.3.1にて動作確認済みです。
 <br>![13](https://user-images.githubusercontent.com/44657623/203992843-7e2b316f-40a3-4f0f-974f-850eff60562f.png)
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createAnimation
 <br>![14](https://user-images.githubusercontent.com/44657623/203993009-3222df91-fef8-4d69-bea8-86a8572714c5.png)
-<br>3.&nbsp;ファイルパスを指定してcreateAnimation
+<br>4.&nbsp;ファイルパスを指定してcreateAnimation
 <br>![15](https://user-images.githubusercontent.com/44657623/203993199-7998066e-c22e-4429-84a6-b251e0681781.png)
+<br>5.&nbsp;下記のようにノードをつないでください。
+<br>![28](https://user-images.githubusercontent.com/44657623/205442940-603f9d8c-6c27-4bd0-8b3b-b0f4ae28b073.png)
+<br>![29](https://user-images.githubusercontent.com/44657623/205442946-cad314d2-6462-4090-8b61-1e71aa06624f.png)
+
 
 # tklファイル出力
 1.&nbsp;コレクションを選択。(コレクションを選択しない場合は、シーンコレクションを選択した扱いになって、すべてのオブジェクトが対象になります。)
