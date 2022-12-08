@@ -1,402 +1,485 @@
 OpenShadingLanguage 1.00
 # Compiled by oslc 1.11.17
-# options: -o C:\Users\akuro\AppData\Local\Temp\tmpwvu38ovq.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
+# options: -o C:\Users\akuro\AppData\Local\Temp\tmp09t00w2m.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
 shader simple_material
-param	color	albedo_map	0 0 0		%read{53,129} %write{2147483647,-1}
-param	normal	normal_map	0 0 0		%read{26,76} %write{0,0} %initexpr
-param	color	metallic_map	0 0 0		%read{2,2} %write{2147483647,-1}
-param	float	smooth_map	0		%read{8,126} %write{2147483647,-1}
-param	vector	world_pos	0 0 0		%read{2147483647,-1} %write{2147483647,-1}
-param	vector	camera_vector	0 0 0		%read{6,76} %write{2147483647,-1}
-param	vector	light_color	1.20000005 1.20000005 1.20000005		%read{51,117} %write{2147483647,-1}
-param	vector	light_direction	0.57735002 -0.57735002 -0.57735002		%read{1,1} %write{2147483647,-1}
-param	vector	ambient_light	0.5 0.5 0.5		%read{129,129} %write{2147483647,-1}
-oparam	color	final_color	0 0 0		%read{130,130} %write{128,130}
-global	normal	N	%read{0,0} %write{2147483647,-1}
-local	float	___370_t2	%read{91,93} %write{82,82}
-local	float	___370_t4	%read{88,88} %write{85,85}
-local	float	___370_m2	%read{87,90} %write{86,86}
-local	float	___370_D	%read{95,96} %write{89,95}
-local	float	___372_microface	%read{86,86} %write{57,57}
-local	float	___372_f0	%read{98,102} %write{58,58}
-local	vector	___372_H	%read{61,66} %write{60,60}
-local	float	___372_NdotH	%read{82,112} %write{65,65}
-local	float	___372_VdotH	%read{99,108} %write{70,70}
-local	float	___372_NdotL	%read{107,107} %write{75,75}
-local	float	___372_NdotV	%read{104,111} %write{80,80}
-local	float	___372_D	%read{113,113} %write{96,96}
-local	float	___372_F	%read{113,113} %write{102,102}
-local	float	___372_G	%read{114,114} %write{110,110}
-local	float	___372_m	%read{115,115} %write{112,112}
-local	vector	___373_H	%read{18,18} %write{7,7}
-local	float	___373_roughness	%read{11,24} %write{8,8}
-local	float	___373_energyBias	%read{25,25} %write{12,12}
-local	float	___373_energyFactor	%read{45,45} %write{17,17}
-local	float	___373_dotLH	%read{22,23} %write{21,21}
-local	float	___373_Fd90	%read{30,39} %write{25,25}
-local	float	___373_dotNL	%read{31,31} %write{29,29}
-local	float	___373_FL	%read{44,44} %write{34,34}
-local	float	___373_dotNV	%read{40,40} %write{38,38}
-local	float	___373_FV	%read{44,44} %write{43,43}
-local	float	___374_diffuseFromFresnel	%read{53,53} %write{45,45}
-local	float	___374_NdotL	%read{51,51} %write{50,50}
-local	vector	___374_lambertDiffuse	%read{54,54} %write{52,52}
-local	vector	___374_diffuse	%read{125,125} %write{54,54}
-local	vector	___374_spec	%read{123,126} %write{117,123}
-local	vector	light_dir	%read{4,55} %write{1,1}
-const	int	$const1	0		%read{2,2} %write{2147483647,-1}
-temp	float	$tmp1	%read{118,118} %write{2,2}
-const	string	$const2	"CalcLighting"		%read{3,3} %write{2147483647,-1}
-temp	vector	$tmp2	%read{6,26} %write{4,4}
-const	string	$const3	"CalcDiffuseFromFresnel"		%read{5,5} %write{2147483647,-1}
-temp	vector	$tmp3	%read{7,7} %write{6,6}
-const	float	$const4	1		%read{8,124} %write{2147483647,-1}
-const	float	$const5	0		%read{10,116} %write{2147483647,-1}
-const	float	$const6	0.5		%read{10,10} %write{2147483647,-1}
-const	string	$const7	"lerp"		%read{9,14} %write{2147483647,-1}
+param	color	albedo_map	0 0 0		%read{0,157} %write{2147483647,-1}
+param	float	albedo_alpha	1		%read{0,0} %write{2147483647,-1}
+param	color	normal_map	0 0 0		%read{11,11} %write{2147483647,-1}
+param	color	metallic_map	0 0 0		%read{30,30} %write{2147483647,-1}
+param	float	smooth_map	0		%read{36,154} %write{2147483647,-1}
+param	vector	world_pos	0 0 0		%read{4,4} %write{2147483647,-1}
+param	vector	tangent	0 0 0		%read{21,23} %write{2147483647,-1}
+param	int	isUseNormalMap	0		%read{8,8} %write{2147483647,-1}
+param	vector	light_color	1.20000005 1.20000005 1.20000005		%read{79,145} %write{2147483647,-1}
+param	vector	light_direction	0.57735002 -0.57735002 -0.57735002		%read{6,6} %write{2147483647,-1}
+param	vector	ambient_light	0.5 0.5 0.5		%read{157,157} %write{2147483647,-1}
+oparam	color	final_color	0 0 0		%read{158,158} %write{156,158}
+global	normal	N	%read{7,7} %write{2147483647,-1}
+local	float	___370_t2	%read{119,121} %write{110,110}
+local	float	___370_t4	%read{116,116} %write{113,113}
+local	float	___370_m2	%read{115,118} %write{114,114}
+local	float	___370_D	%read{123,124} %write{117,123}
+local	float	___372_microface	%read{114,114} %write{85,85}
+local	float	___372_f0	%read{126,130} %write{86,86}
+local	vector	___372_H	%read{89,94} %write{88,88}
+local	float	___372_NdotH	%read{110,140} %write{93,93}
+local	float	___372_VdotH	%read{127,136} %write{98,98}
+local	float	___372_NdotL	%read{135,135} %write{103,103}
+local	float	___372_NdotV	%read{132,139} %write{108,108}
+local	float	___372_D	%read{141,141} %write{124,124}
+local	float	___372_F	%read{141,141} %write{130,130}
+local	float	___372_G	%read{142,142} %write{138,138}
+local	float	___372_m	%read{143,143} %write{140,140}
+local	vector	___373_H	%read{46,46} %write{35,35}
+local	float	___373_roughness	%read{39,52} %write{36,36}
+local	float	___373_energyBias	%read{53,53} %write{40,40}
+local	float	___373_energyFactor	%read{73,73} %write{45,45}
+local	float	___373_dotLH	%read{50,51} %write{49,49}
+local	float	___373_Fd90	%read{58,67} %write{53,53}
+local	float	___373_dotNL	%read{59,59} %write{57,57}
+local	float	___373_FL	%read{72,72} %write{62,62}
+local	float	___373_dotNV	%read{68,68} %write{66,66}
+local	float	___373_FV	%read{72,72} %write{71,71}
+local	float	___374_diffuseFromFresnel	%read{81,81} %write{73,73}
+local	float	___374_NdotL	%read{79,79} %write{78,78}
+local	vector	___374_lambertDiffuse	%read{82,82} %write{80,80}
+local	vector	___374_diffuse	%read{153,153} %write{82,82}
+local	vector	___374_spec	%read{151,154} %write{145,151}
+local	normal	___375_binSpaceNormal	%read{12,27} %write{11,20}
+local	float	___375_tmp	%read{20,20} %write{14,14}
+local	normal	___375_biNormal	%read{25,25} %write{21,21}
+local	color	albedo_color	%read{2147483647,-1} %write{0,0}
+local	point	camera_pos	%read{4,4} %write{3,3}
+local	vector	to_eye	%read{34,104} %write{5,5}
+local	vector	light_dir	%read{32,83} %write{6,6}
+local	normal	newNormal	%read{21,104} %write{7,29}
+temp	point	$tmp1	%read{3,3} %write{1,1}
+const	string	$const1	"camera"		%read{1,1} %write{2147483647,-1}
+const	int	$const2	0		%read{15,30} %write{2147483647,-1}
+const	float	$const3	0		%read{1,144} %write{2147483647,-1}
+temp	point	$tmp2	%read{3,3} %write{2,2}
+const	string	$const4	"world"		%read{2,2} %write{2147483647,-1}
+temp	point	$tmp3	%read{5,5} %write{4,4}
+const	string	$const5	"calc_normal"		%read{9,9} %write{2147483647,-1}
+const	float	$const6	1		%read{10,152} %write{2147483647,-1}
+const	float	$const7	2.20000005		%read{10,10} %write{2147483647,-1}
 temp	float	$tmp4	%read{11,11} %write{10,10}
-temp	float	$tmp5	%read{12,12} %write{11,11}
-const	float	$const8	1.50999999		%read{13,13} %write{2147483647,-1}
-temp	float	$tmp6	%read{15,15} %write{13,13}
-temp	float	$tmp7	%read{16,16} %write{15,15}
-temp	float	$tmp8	%read{17,17} %write{16,16}
-temp	float	$tmp9	%read{20,20} %write{18,18}
-const	string	$const9	"clamp"		%read{19,77} %write{2147483647,-1}
-temp	float	$tmp10	%read{21,21} %write{20,20}
-const	float	$const10	2		%read{22,106} %write{2147483647,-1}
-temp	float	$tmp11	%read{23,23} %write{22,22}
-temp	float	$tmp12	%read{24,24} %write{23,23}
-temp	float	$tmp13	%read{25,25} %write{24,24}
-temp	float	$tmp14	%read{28,28} %write{26,26}
-temp	float	$tmp15	%read{29,29} %write{28,28}
-temp	float	$tmp16	%read{33,33} %write{30,30}
-temp	float	$tmp17	%read{33,33} %write{32,32}
-temp	float	$tmp18	%read{32,32} %write{31,31}
-const	float	$const13	5		%read{32,100} %write{2147483647,-1}
-temp	float	$tmp19	%read{34,34} %write{33,33}
-temp	float	$tmp20	%read{37,37} %write{35,35}
-temp	float	$tmp21	%read{38,38} %write{37,37}
-temp	float	$tmp22	%read{42,42} %write{39,39}
-temp	float	$tmp23	%read{42,42} %write{41,41}
-temp	float	$tmp24	%read{41,41} %write{40,40}
-temp	float	$tmp25	%read{43,43} %write{42,42}
-temp	float	$tmp26	%read{45,45} %write{44,44}
-temp	float	$tmp27	%read{49,49} %write{47,47}
-temp	vector	$tmp28	%read{47,47} %write{46,46}
-temp	float	$tmp29	%read{50,50} %write{49,49}
-temp	vector	$tmp30	%read{52,52} %write{51,51}
-const	float	$const14	3.14159274		%read{52,111} %write{2147483647,-1}
-temp	color	$tmp31	%read{54,54} %write{53,53}
-temp	float	$tmp32	%read{117,117} %write{116,116}
-temp	vector	$tmp33	%read{59,71} %write{55,55}
-const	string	$const15	"CookTorranceSpecular"		%read{56,56} %write{2147483647,-1}
-temp	vector	$tmp34	%read{60,60} %write{59,59}
-temp	float	$tmp35	%read{65,65} %write{64,64}
-temp	float	$tmp36	%read{63,63} %write{61,61}
-temp	float	$tmp37	%read{64,64} %write{63,63}
-const	float	$const16	0.00100000005		%read{65,80} %write{2147483647,-1}
+const	float	$const8	2		%read{12,134} %write{2147483647,-1}
+temp	normal	$tmp5	%read{13,13} %write{12,12}
+const	int	$const9	1		%read{14,27} %write{2147483647,-1}
+temp	float	$tmp6	%read{16,16} %write{15,15}
+const	float	$const10	-1		%read{16,118} %write{2147483647,-1}
+temp	float	$tmp7	%read{17,17} %write{16,16}
+const	int	$const11	2		%read{18,24} %write{2147483647,-1}
+temp	float	$tmp8	%read{19,19} %write{18,18}
+temp	float	$tmp9	%read{23,23} %write{22,22}
+temp	vector	$tmp10	%read{26,26} %write{23,23}
+temp	float	$tmp11	%read{25,25} %write{24,24}
+temp	normal	$tmp12	%read{26,26} %write{25,25}
+temp	vector	$tmp13	%read{29,29} %write{26,26}
+temp	float	$tmp14	%read{28,28} %write{27,27}
+temp	normal	$tmp15	%read{29,29} %write{28,28}
+temp	float	$tmp16	%read{146,146} %write{30,30}
+const	string	$const12	"CalcLighting"		%read{31,31} %write{2147483647,-1}
+temp	vector	$tmp17	%read{34,54} %write{32,32}
+const	string	$const13	"CalcDiffuseFromFresnel"		%read{33,33} %write{2147483647,-1}
+temp	vector	$tmp18	%read{35,35} %write{34,34}
+const	float	$const14	0.5		%read{38,38} %write{2147483647,-1}
+const	string	$const15	"lerp"		%read{37,42} %write{2147483647,-1}
+temp	float	$tmp19	%read{39,39} %write{38,38}
+temp	float	$tmp20	%read{40,40} %write{39,39}
+const	float	$const16	1.50999999		%read{41,41} %write{2147483647,-1}
+temp	float	$tmp21	%read{43,43} %write{41,41}
+temp	float	$tmp22	%read{44,44} %write{43,43}
+temp	float	$tmp23	%read{45,45} %write{44,44}
+temp	float	$tmp24	%read{48,48} %write{46,46}
+const	string	$const17	"clamp"		%read{47,105} %write{2147483647,-1}
+temp	float	$tmp25	%read{49,49} %write{48,48}
+temp	float	$tmp26	%read{51,51} %write{50,50}
+temp	float	$tmp27	%read{52,52} %write{51,51}
+temp	float	$tmp28	%read{53,53} %write{52,52}
+temp	float	$tmp29	%read{56,56} %write{54,54}
+temp	float	$tmp30	%read{57,57} %write{56,56}
+temp	float	$tmp31	%read{61,61} %write{58,58}
+temp	float	$tmp32	%read{61,61} %write{60,60}
+temp	float	$tmp33	%read{60,60} %write{59,59}
+const	float	$const19	5		%read{60,128} %write{2147483647,-1}
+temp	float	$tmp34	%read{62,62} %write{61,61}
+temp	float	$tmp35	%read{65,65} %write{63,63}
+temp	float	$tmp36	%read{66,66} %write{65,65}
+temp	float	$tmp37	%read{70,70} %write{67,67}
 temp	float	$tmp38	%read{70,70} %write{69,69}
-temp	float	$tmp39	%read{68,68} %write{66,66}
-temp	float	$tmp40	%read{69,69} %write{68,68}
-temp	float	$tmp41	%read{75,75} %write{74,74}
-temp	float	$tmp42	%read{73,73} %write{71,71}
-temp	float	$tmp43	%read{74,74} %write{73,73}
-temp	float	$tmp44	%read{80,80} %write{79,79}
-temp	float	$tmp45	%read{78,78} %write{76,76}
-temp	float	$tmp46	%read{79,79} %write{78,78}
-const	string	$const17	"Beckmann"		%read{81,81} %write{2147483647,-1}
-temp	float	$tmp47	%read{84,84} %write{83,83}
-temp	float	$tmp48	%read{85,85} %write{84,84}
-const	float	$const18	4		%read{87,87} %write{2147483647,-1}
-temp	float	$tmp49	%read{88,88} %write{87,87}
-temp	float	$tmp50	%read{89,89} %write{88,88}
-temp	float	$tmp51	%read{95,95} %write{94,94}
-const	float	$const19	-1		%read{90,90} %write{2147483647,-1}
-temp	float	$tmp52	%read{92,92} %write{90,90}
-temp	float	$tmp53	%read{92,92} %write{91,91}
-temp	float	$tmp54	%read{93,93} %write{92,92}
-temp	float	$tmp55	%read{94,94} %write{93,93}
-const	string	$const20	"SpcFresnel"		%read{97,97} %write{2147483647,-1}
-temp	float	$tmp56	%read{101,101} %write{98,98}
-temp	float	$tmp57	%read{101,101} %write{100,100}
-temp	float	$tmp58	%read{100,100} %write{99,99}
-temp	float	$tmp59	%read{102,102} %write{101,101}
-temp	float	$tmp60	%read{110,110} %write{109,109}
-temp	float	$tmp61	%read{104,104} %write{103,103}
-temp	float	$tmp62	%read{105,105} %write{104,104}
-temp	float	$tmp63	%read{109,109} %write{105,105}
-temp	float	$tmp64	%read{107,107} %write{106,106}
-temp	float	$tmp65	%read{108,108} %write{107,107}
-temp	float	$tmp66	%read{109,109} %write{108,108}
-temp	float	$tmp67	%read{112,112} %write{111,111}
-temp	float	$tmp68	%read{114,114} %write{113,113}
-temp	float	$tmp69	%read{115,115} %write{114,114}
-temp	float	$tmp70	%read{116,116} %write{115,115}
-temp	vector	$tmp71	%read{123,123} %write{122,122}
-const	color	$const22	1 1 1		%read{120,122} %write{2147483647,-1}
-temp	vector	$tmp73	%read{121,121} %write{118,118}
-const	string	$const23	"lerp_vector"		%read{119,119} %write{2147483647,-1}
-temp	vector	$tmp74	%read{121,121} %write{120,120}
-temp	vector	$tmp75	%read{122,122} %write{121,121}
-const	vector	$const24	0 0 0		%read{128,128} %write{2147483647,-1}
-temp	float	$tmp77	%read{125,125} %write{124,124}
-temp	vector	$tmp78	%read{127,127} %write{125,125}
-temp	vector	$tmp79	%read{127,127} %write{126,126}
-temp	vector	$tmp80	%read{128,128} %write{127,127}
-temp	color	$tmp81	%read{130,130} %write{129,129}
-code normal_map
-# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:164
-#     //メタリック
-	assign		normal_map N 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{164} %argrw{"wr"}
+temp	float	$tmp39	%read{69,69} %write{68,68}
+temp	float	$tmp40	%read{71,71} %write{70,70}
+temp	float	$tmp41	%read{73,73} %write{72,72}
+temp	float	$tmp42	%read{77,77} %write{75,75}
+temp	vector	$tmp43	%read{75,75} %write{74,74}
+temp	float	$tmp44	%read{78,78} %write{77,77}
+temp	vector	$tmp45	%read{80,80} %write{79,79}
+const	float	$const20	3.14159274		%read{80,139} %write{2147483647,-1}
+temp	color	$tmp46	%read{82,82} %write{81,81}
+temp	float	$tmp47	%read{145,145} %write{144,144}
+temp	vector	$tmp48	%read{87,99} %write{83,83}
+const	string	$const21	"CookTorranceSpecular"		%read{84,84} %write{2147483647,-1}
+temp	vector	$tmp49	%read{88,88} %write{87,87}
+temp	float	$tmp50	%read{93,93} %write{92,92}
+temp	float	$tmp51	%read{91,91} %write{89,89}
+temp	float	$tmp52	%read{92,92} %write{91,91}
+const	float	$const22	0.00100000005		%read{93,108} %write{2147483647,-1}
+temp	float	$tmp53	%read{98,98} %write{97,97}
+temp	float	$tmp54	%read{96,96} %write{94,94}
+temp	float	$tmp55	%read{97,97} %write{96,96}
+temp	float	$tmp56	%read{103,103} %write{102,102}
+temp	float	$tmp57	%read{101,101} %write{99,99}
+temp	float	$tmp58	%read{102,102} %write{101,101}
+temp	float	$tmp59	%read{108,108} %write{107,107}
+temp	float	$tmp60	%read{106,106} %write{104,104}
+temp	float	$tmp61	%read{107,107} %write{106,106}
+const	string	$const23	"Beckmann"		%read{109,109} %write{2147483647,-1}
+temp	float	$tmp62	%read{112,112} %write{111,111}
+temp	float	$tmp63	%read{113,113} %write{112,112}
+const	float	$const24	4		%read{115,115} %write{2147483647,-1}
+temp	float	$tmp64	%read{116,116} %write{115,115}
+temp	float	$tmp65	%read{117,117} %write{116,116}
+temp	float	$tmp66	%read{123,123} %write{122,122}
+temp	float	$tmp67	%read{120,120} %write{118,118}
+temp	float	$tmp68	%read{120,120} %write{119,119}
+temp	float	$tmp69	%read{121,121} %write{120,120}
+temp	float	$tmp70	%read{122,122} %write{121,121}
+const	string	$const25	"SpcFresnel"		%read{125,125} %write{2147483647,-1}
+temp	float	$tmp71	%read{129,129} %write{126,126}
+temp	float	$tmp72	%read{129,129} %write{128,128}
+temp	float	$tmp73	%read{128,128} %write{127,127}
+temp	float	$tmp74	%read{130,130} %write{129,129}
+temp	float	$tmp75	%read{138,138} %write{137,137}
+temp	float	$tmp76	%read{132,132} %write{131,131}
+temp	float	$tmp77	%read{133,133} %write{132,132}
+temp	float	$tmp78	%read{137,137} %write{133,133}
+temp	float	$tmp79	%read{135,135} %write{134,134}
+temp	float	$tmp80	%read{136,136} %write{135,135}
+temp	float	$tmp81	%read{137,137} %write{136,136}
+temp	float	$tmp82	%read{140,140} %write{139,139}
+temp	float	$tmp83	%read{142,142} %write{141,141}
+temp	float	$tmp84	%read{143,143} %write{142,142}
+temp	float	$tmp85	%read{144,144} %write{143,143}
+temp	vector	$tmp86	%read{151,151} %write{150,150}
+const	color	$const26	1 1 1		%read{148,150} %write{2147483647,-1}
+temp	vector	$tmp88	%read{149,149} %write{146,146}
+const	string	$const27	"lerp_vector"		%read{147,147} %write{2147483647,-1}
+temp	vector	$tmp89	%read{149,149} %write{148,148}
+temp	vector	$tmp90	%read{150,150} %write{149,149}
+const	vector	$const28	0 0 0		%read{156,156} %write{2147483647,-1}
+temp	float	$tmp92	%read{153,153} %write{152,152}
+temp	vector	$tmp93	%read{155,155} %write{153,153}
+temp	vector	$tmp94	%read{155,155} %write{154,154}
+temp	vector	$tmp95	%read{156,156} %write{155,155}
+temp	color	$tmp96	%read{158,158} %write{157,157}
 code ___main___
-# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:185
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:199
 # 
-	normalize	light_dir light_direction 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{185} %argrw{"wr"}
-# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:193
+	mul		albedo_color albedo_map albedo_alpha 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{199} %argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:202
+#     //カメラに向かうベクトル
+	point		$tmp1 $const1 $const3 $const3 $const3 	%line{202} %argrw{"wrrrr"}
+	point		$tmp2 $const4 $const3 $const3 $const3 	%argrw{"wrrrr"}
+	sub		camera_pos $tmp1 $tmp2 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:204
+#     //ディレクションライトを正規化
+	sub		$tmp3 camera_pos world_pos 	%line{204} %argrw{"wrr"}
+	normalize	to_eye $tmp3 	%argrw{"wr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:206
+# 
+	normalize	light_dir light_direction 	%line{206} %argrw{"wr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:208
+#     if(isUseNormalMap)
+	assign		newNormal N 	%line{208} %argrw{"wr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:209
+#     {
+	if		isUseNormalMap 30 30 	%line{209} %argrw{"r"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:211
+#     }
+	functioncall	$const5 30 	%line{211} %argrw{"r"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:160
+#     binSpaceNormal = (binSpaceNormal * 2.0) - 1.0;
+	div		$tmp4 $const6 $const7 	%line{160} %argrw{"wrr"}
+	pow		___375_binSpaceNormal normal_map $tmp4 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:161
+#     float tmp = binSpaceNormal.y;
+	mul		$tmp5 ___375_binSpaceNormal $const8 	%line{161} %argrw{"wrr"}
+	sub		___375_binSpaceNormal $tmp5 $const6 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:162
+#     binSpaceNormal.x *= -1.0;
+	compref		___375_tmp ___375_binSpaceNormal $const9 	%line{162} %argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:163
+#     binSpaceNormal.y = binSpaceNormal.z;
+	compref		$tmp6 ___375_binSpaceNormal $const2 	%line{163} %argrw{"wrr"}
+	mul		$tmp7 $tmp6 $const10 	%argrw{"wrr"}
+	compassign	___375_binSpaceNormal $const2 $tmp7 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:164
+#     binSpaceNormal.z = tmp;
+	compref		$tmp8 ___375_binSpaceNormal $const11 	%line{164} %argrw{"wrr"}
+	compassign	___375_binSpaceNormal $const9 $tmp8 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:165
+# 
+	compassign	___375_binSpaceNormal $const11 ___375_tmp 	%line{165} %argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:167
+# 
+	cross		___375_biNormal newNormal tangent 	%line{167} %argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:169
+# }
+	compref		$tmp9 ___375_binSpaceNormal $const2 	%line{169} %argrw{"wrr"}
+	mul		$tmp10 tangent $tmp9 	%argrw{"wrr"}
+	compref		$tmp11 ___375_binSpaceNormal $const11 	%argrw{"wrr"}
+	mul		$tmp12 ___375_biNormal $tmp11 	%argrw{"wrr"}
+	add		$tmp13 $tmp10 $tmp12 	%argrw{"wrr"}
+	compref		$tmp14 ___375_binSpaceNormal $const9 	%argrw{"wrr"}
+	mul		$tmp15 newNormal $tmp14 	%argrw{"wrr"}
+	add		newNormal $tmp13 $tmp15 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:220
 #         smooth_map,
-	compref		$tmp1 metallic_map $const1 	%line{193} %argrw{"wrr"}
-# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:187
+	compref		$tmp16 metallic_map $const2 	%line{220} %argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:214
 #         light_dir,
-	functioncall	$const2 129 	%line{187} %argrw{"r"}
+	functioncall	$const12 157 	%line{214} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:133
 # 
-	neg		$tmp2 light_dir 	%line{133} %argrw{"wr"}
+	neg		$tmp17 light_dir 	%line{133} %argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:132
 #         n, -ligDir, toEye, smooth);
-	functioncall	$const3 46 	%line{132} %argrw{"r"}
+	functioncall	$const13 74 	%line{132} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:89
 #     
-	add		$tmp3 $tmp2 camera_vector 	%line{89} %argrw{"wrr"}
-	normalize	___373_H $tmp3 	%argrw{"wr"}
+	add		$tmp18 $tmp17 to_eye 	%line{89} %argrw{"wrr"}
+	normalize	___373_H $tmp18 	%argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:92
 #     
-	sub		___373_roughness $const4 smooth_map 	%line{92} %argrw{"wrr"}
+	sub		___373_roughness $const6 smooth_map 	%line{92} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:95
 #     float energyFactor = lerp(1.0, 1.0/1.51, roughness);
-	functioncall	$const7 13 	%line{95} %argrw{"r"}
+	functioncall	$const15 41 	%line{95} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:5
 # }
-	sub		$tmp4 $const6 $const5 	%line{5} %argrw{"wrr"}
-	mul		$tmp5 ___373_roughness $tmp4 	%argrw{"wrr"}
-	add		___373_energyBias $const5 $tmp5 	%argrw{"wrr"}
+	sub		$tmp19 $const14 $const3 	%line{5} %argrw{"wrr"}
+	mul		$tmp20 ___373_roughness $tmp19 	%argrw{"wrr"}
+	add		___373_energyBias $const3 $tmp20 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:96
 # 
-	div		$tmp6 $const4 $const8 	%line{96} %argrw{"wrr"}
-	functioncall	$const7 18 	%argrw{"r"}
+	div		$tmp21 $const6 $const16 	%line{96} %argrw{"wrr"}
+	functioncall	$const15 46 	%argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:5
 # }
-	sub		$tmp7 $tmp6 $const4 	%line{5} %argrw{"wrr"}
-	mul		$tmp8 ___373_roughness $tmp7 	%argrw{"wrr"}
-	add		___373_energyFactor $const4 $tmp8 	%argrw{"wrr"}
+	sub		$tmp22 $tmp21 $const6 	%line{5} %argrw{"wrr"}
+	mul		$tmp23 ___373_roughness $tmp22 	%argrw{"wrr"}
+	add		___373_energyFactor $const6 $tmp23 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:99
 #     // 光源に向かうベクトルとハーフベクトル、光が平行に入射したときの拡散反射量を求めている。
-	dot		$tmp9 $tmp2 ___373_H 	%line{99} %argrw{"wrr"}
-	functioncall	$const9 22 	%argrw{"r"}
+	dot		$tmp24 $tmp17 ___373_H 	%line{99} %argrw{"wrr"}
+	functioncall	$const17 50 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp10 $tmp9 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		___373_dotLH $tmp10 $const5 	%argrw{"wrr"}
+	min		$tmp25 $tmp24 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		___373_dotLH $tmp25 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:101
 #     
-	mul		$tmp11 $const10 ___373_dotLH 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{101} %argrw{"wrr"}
-	mul		$tmp12 $tmp11 ___373_dotLH 	%argrw{"wrr"}
-	mul		$tmp13 $tmp12 ___373_roughness 	%argrw{"wrr"}
-	add		___373_Fd90 ___373_energyBias $tmp13 	%argrw{"wrr"}
+	mul		$tmp26 $const8 ___373_dotLH 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{101} %argrw{"wrr"}
+	mul		$tmp27 $tmp26 ___373_dotLH 	%argrw{"wrr"}
+	mul		$tmp28 $tmp27 ___373_roughness 	%argrw{"wrr"}
+	add		___373_Fd90 ___373_energyBias $tmp28 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:104
 #     float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
-	dot		$tmp14 normal_map $tmp2 	%line{104} %argrw{"wrr"}
-	functioncall	$const9 30 	%argrw{"r"}
+	dot		$tmp29 newNormal $tmp17 	%line{104} %argrw{"wrr"}
+	functioncall	$const17 58 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp15 $tmp14 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		___373_dotNL $tmp15 $const5 	%argrw{"wrr"}
+	min		$tmp30 $tmp29 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		___373_dotNL $tmp30 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:105
 # 
-	sub		$tmp16 ___373_Fd90 $const4 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{105} %argrw{"wrr"}
-	sub		$tmp18 $const4 ___373_dotNL 	%argrw{"wrr"}
-	pow		$tmp17 $tmp18 $const13 	%argrw{"wrr"}
-	mul		$tmp19 $tmp16 $tmp17 	%argrw{"wrr"}
-	add		___373_FL $const4 $tmp19 	%argrw{"wrr"}
+	sub		$tmp31 ___373_Fd90 $const6 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{105} %argrw{"wrr"}
+	sub		$tmp33 $const6 ___373_dotNL 	%argrw{"wrr"}
+	pow		$tmp32 $tmp33 $const19 	%argrw{"wrr"}
+	mul		$tmp34 $tmp31 $tmp32 	%argrw{"wrr"}
+	add		___373_FL $const6 $tmp34 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:109
 #     float FV =  (1 + (Fd90 - 1) * pow(1 - dotNV, 5));
-	dot		$tmp20 normal_map camera_vector 	%line{109} %argrw{"wrr"}
-	functioncall	$const9 39 	%argrw{"r"}
+	dot		$tmp35 newNormal to_eye 	%line{109} %argrw{"wrr"}
+	functioncall	$const17 67 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp21 $tmp20 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		___373_dotNV $tmp21 $const5 	%argrw{"wrr"}
+	min		$tmp36 $tmp35 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		___373_dotNV $tmp36 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:110
 # 
-	sub		$tmp22 ___373_Fd90 $const4 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{110} %argrw{"wrr"}
-	sub		$tmp24 $const4 ___373_dotNV 	%argrw{"wrr"}
-	pow		$tmp23 $tmp24 $const13 	%argrw{"wrr"}
-	mul		$tmp25 $tmp22 $tmp23 	%argrw{"wrr"}
-	add		___373_FV $const4 $tmp25 	%argrw{"wrr"}
+	sub		$tmp37 ___373_Fd90 $const6 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{110} %argrw{"wrr"}
+	sub		$tmp39 $const6 ___373_dotNV 	%argrw{"wrr"}
+	pow		$tmp38 $tmp39 $const19 	%argrw{"wrr"}
+	mul		$tmp40 $tmp37 $tmp38 	%argrw{"wrr"}
+	add		___373_FV $const6 $tmp40 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:114
 # }
-	mul		$tmp26 ___373_FL ___373_FV 	%line{114} %argrw{"wrr"}
-	mul		___374_diffuseFromFresnel $tmp26 ___373_energyFactor 	%argrw{"wrr"}
+	mul		$tmp41 ___373_FL ___373_FV 	%line{114} %argrw{"wrr"}
+	mul		___374_diffuseFromFresnel $tmp41 ___373_energyFactor 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:136
 #     vector lambertDiffuse = ligColor * NdotL / M_PI;
-	neg		$tmp28 light_dir 	%line{136} %argrw{"wr"}
-	dot		$tmp27 normal_map $tmp28 	%argrw{"wrr"}
-	functioncall	$const9 51 	%argrw{"r"}
+	neg		$tmp43 light_dir 	%line{136} %argrw{"wr"}
+	dot		$tmp42 newNormal $tmp43 	%argrw{"wrr"}
+	functioncall	$const17 79 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp29 $tmp27 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		___374_NdotL $tmp29 $const5 	%argrw{"wrr"}
+	min		$tmp44 $tmp42 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		___374_NdotL $tmp44 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:137
 # 
-	mul		$tmp30 light_color ___374_NdotL 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{137} %argrw{"wrr"}
-	div		___374_lambertDiffuse $tmp30 $const14 	%argrw{"wrr"}
+	mul		$tmp45 light_color ___374_NdotL 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{137} %argrw{"wrr"}
+	div		___374_lambertDiffuse $tmp45 $const20 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:140
 # 
-	mul		$tmp31 albedo_map ___374_diffuseFromFresnel 	%line{140} %argrw{"wrr"}
-	mul		___374_diffuse $tmp31 ___374_lambertDiffuse 	%argrw{"wrr"}
+	mul		$tmp46 albedo_map ___374_diffuseFromFresnel 	%line{140} %argrw{"wrr"}
+	mul		___374_diffuse $tmp46 ___374_lambertDiffuse 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:145
 #         * ligColor;
-	neg		$tmp33 light_dir 	%line{145} %argrw{"wr"}
+	neg		$tmp48 light_dir 	%line{145} %argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:144
 #         -ligDir, toEye, n, smooth)
-	functioncall	$const15 117 	%line{144} %argrw{"r"}
+	functioncall	$const21 145 	%line{144} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:40
 # 
-	sub		___372_microface $const4 smooth_map 	%line{40} %argrw{"wrr"}
+	sub		___372_microface $const6 smooth_map 	%line{40} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:44
 # 
 	assign		___372_f0 smooth_map 	%line{44} %argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:47
 # 
-	add		$tmp34 $tmp33 camera_vector 	%line{47} %argrw{"wrr"}
-	normalize	___372_H $tmp34 	%argrw{"wr"}
+	add		$tmp49 $tmp48 to_eye 	%line{47} %argrw{"wrr"}
+	normalize	___372_H $tmp49 	%argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:50
 #     float VdotH = max( clamp((dot(V, H)),0.0,1.0), 0.001 );
-	dot		$tmp36 normal_map ___372_H 	%line{50} %argrw{"wrr"}
-	functioncall	$const9 65 	%argrw{"r"}
+	dot		$tmp51 newNormal ___372_H 	%line{50} %argrw{"wrr"}
+	functioncall	$const17 93 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp37 $tmp36 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		$tmp35 $tmp37 $const5 	%argrw{"wrr"}
+	min		$tmp52 $tmp51 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		$tmp50 $tmp52 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:50
 #     float VdotH = max( clamp((dot(V, H)),0.0,1.0), 0.001 );
-	max		___372_NdotH $tmp35 $const16 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{50} %argrw{"wrr"}
+	max		___372_NdotH $tmp50 $const22 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{50} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:51
 #     float NdotL = max( clamp((dot(n, L)),0.0,1.0), 0.001 );
-	dot		$tmp39 camera_vector ___372_H 	%line{51} %argrw{"wrr"}
-	functioncall	$const9 70 	%argrw{"r"}
+	dot		$tmp54 to_eye ___372_H 	%line{51} %argrw{"wrr"}
+	functioncall	$const17 98 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp40 $tmp39 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		$tmp38 $tmp40 $const5 	%argrw{"wrr"}
+	min		$tmp55 $tmp54 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		$tmp53 $tmp55 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:51
 #     float NdotL = max( clamp((dot(n, L)),0.0,1.0), 0.001 );
-	max		___372_VdotH $tmp38 $const16 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{51} %argrw{"wrr"}
+	max		___372_VdotH $tmp53 $const22 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{51} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:52
 #     float NdotV = max( clamp((dot(n, V)),0.0,1.0), 0.001 );
-	dot		$tmp42 normal_map $tmp33 	%line{52} %argrw{"wrr"}
-	functioncall	$const9 75 	%argrw{"r"}
+	dot		$tmp57 newNormal $tmp48 	%line{52} %argrw{"wrr"}
+	functioncall	$const17 103 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp43 $tmp42 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		$tmp41 $tmp43 $const5 	%argrw{"wrr"}
+	min		$tmp58 $tmp57 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		$tmp56 $tmp58 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:52
 #     float NdotV = max( clamp((dot(n, V)),0.0,1.0), 0.001 );
-	max		___372_NdotL $tmp41 $const16 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{52} %argrw{"wrr"}
+	max		___372_NdotL $tmp56 $const22 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{52} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:53
 # 
-	dot		$tmp45 normal_map camera_vector 	%line{53} %argrw{"wrr"}
-	functioncall	$const9 80 	%argrw{"r"}
+	dot		$tmp60 newNormal to_eye 	%line{53} %argrw{"wrr"}
+	functioncall	$const17 108 	%argrw{"r"}
 # C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h:141
 # float  clamp (float x, float minval, float maxval) { return max(min(x,maxval),minval); }
-	min		$tmp46 $tmp45 $const4 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
-	max		$tmp44 $tmp46 $const5 	%argrw{"wrr"}
+	min		$tmp61 $tmp60 $const6 	%filename{"C:\\Program Files\\Blender Foundation\\Blender 3.3\\3.3\\scripts\\addons\\cycles\\shader/stdosl.h"} %line{141} %argrw{"wrr"}
+	max		$tmp59 $tmp61 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:53
 # 
-	max		___372_NdotV $tmp44 $const16 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{53} %argrw{"wrr"}
+	max		___372_NdotV $tmp59 $const22 	%filename{"C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl"} %line{53} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:56
 # 
-	functioncall	$const17 97 	%line{56} %argrw{"r"}
+	functioncall	$const23 125 	%line{56} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:16
 #     float t4 = t * t * t * t;
 	mul		___370_t2 ___372_NdotH ___372_NdotH 	%line{16} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:17
 #     float m2 = m * m;
-	mul		$tmp47 ___372_NdotH ___372_NdotH 	%line{17} %argrw{"wrr"}
-	mul		$tmp48 $tmp47 ___372_NdotH 	%argrw{"wrr"}
-	mul		___370_t4 $tmp48 ___372_NdotH 	%argrw{"wrr"}
+	mul		$tmp62 ___372_NdotH ___372_NdotH 	%line{17} %argrw{"wrr"}
+	mul		$tmp63 $tmp62 ___372_NdotH 	%argrw{"wrr"}
+	mul		___370_t4 $tmp63 ___372_NdotH 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:18
 #     float D = 1.0 / (4.0 * m2 * t4);
 	mul		___370_m2 ___372_microface ___372_microface 	%line{18} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:19
 #     D *= exp((-1.0 / m2) * (1.0-t2)/ t2);
-	mul		$tmp49 $const18 ___370_m2 	%line{19} %argrw{"wrr"}
-	mul		$tmp50 $tmp49 ___370_t4 	%argrw{"wrr"}
-	div		___370_D $const4 $tmp50 	%argrw{"wrr"}
+	mul		$tmp64 $const24 ___370_m2 	%line{19} %argrw{"wrr"}
+	mul		$tmp65 $tmp64 ___370_t4 	%argrw{"wrr"}
+	div		___370_D $const6 $tmp65 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:20
 #     return D;
-	div		$tmp52 $const19 ___370_m2 	%line{20} %argrw{"wrr"}
-	sub		$tmp53 $const4 ___370_t2 	%argrw{"wrr"}
-	mul		$tmp54 $tmp52 $tmp53 	%argrw{"wrr"}
-	div		$tmp55 $tmp54 ___370_t2 	%argrw{"wrr"}
-	exp		$tmp51 $tmp55 	%argrw{"wr"}
-	mul		___370_D ___370_D $tmp51 	%argrw{"wrr"}
+	div		$tmp67 $const10 ___370_m2 	%line{20} %argrw{"wrr"}
+	sub		$tmp68 $const6 ___370_t2 	%argrw{"wrr"}
+	mul		$tmp69 $tmp67 $tmp68 	%argrw{"wrr"}
+	div		$tmp70 $tmp69 ___370_t2 	%argrw{"wrr"}
+	exp		$tmp66 $tmp70 	%argrw{"wr"}
+	mul		___370_D ___370_D $tmp66 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:21
 # }
 	assign		___372_D ___370_D 	%line{21} %argrw{"wr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:59
 # 
-	functioncall	$const20 103 	%line{59} %argrw{"r"}
+	functioncall	$const25 131 	%line{59} %argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:28
 # }
-	sub		$tmp56 $const4 ___372_f0 	%line{28} %argrw{"wrr"}
-	sub		$tmp58 $const4 ___372_VdotH 	%argrw{"wrr"}
-	pow		$tmp57 $tmp58 $const13 	%argrw{"wrr"}
-	mul		$tmp59 $tmp56 $tmp57 	%argrw{"wrr"}
-	add		___372_F ___372_f0 $tmp59 	%argrw{"wrr"}
+	sub		$tmp71 $const6 ___372_f0 	%line{28} %argrw{"wrr"}
+	sub		$tmp73 $const6 ___372_VdotH 	%argrw{"wrr"}
+	pow		$tmp72 $tmp73 $const19 	%argrw{"wrr"}
+	mul		$tmp74 $tmp71 $tmp72 	%argrw{"wrr"}
+	add		___372_F ___372_f0 $tmp74 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:62
 # 
-	mul		$tmp61 $const10 ___372_NdotH 	%line{62} %argrw{"wrr"}
-	mul		$tmp62 $tmp61 ___372_NdotV 	%argrw{"wrr"}
-	div		$tmp63 $tmp62 ___372_VdotH 	%argrw{"wrr"}
-	mul		$tmp64 $const10 ___372_NdotH 	%argrw{"wrr"}
-	mul		$tmp65 $tmp64 ___372_NdotL 	%argrw{"wrr"}
-	div		$tmp66 $tmp65 ___372_VdotH 	%argrw{"wrr"}
-	min		$tmp60 $tmp63 $tmp66 	%argrw{"wrr"}
-	min		___372_G $const4 $tmp60 	%argrw{"wrr"}
+	mul		$tmp76 $const8 ___372_NdotH 	%line{62} %argrw{"wrr"}
+	mul		$tmp77 $tmp76 ___372_NdotV 	%argrw{"wrr"}
+	div		$tmp78 $tmp77 ___372_VdotH 	%argrw{"wrr"}
+	mul		$tmp79 $const8 ___372_NdotH 	%argrw{"wrr"}
+	mul		$tmp80 $tmp79 ___372_NdotL 	%argrw{"wrr"}
+	div		$tmp81 $tmp80 ___372_VdotH 	%argrw{"wrr"}
+	min		$tmp75 $tmp78 $tmp81 	%argrw{"wrr"}
+	min		___372_G $const6 $tmp75 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:65
 # 
-	mul		$tmp67 $const14 ___372_NdotV 	%line{65} %argrw{"wrr"}
-	mul		___372_m $tmp67 ___372_NdotH 	%argrw{"wrr"}
+	mul		$tmp82 $const20 ___372_NdotV 	%line{65} %argrw{"wrr"}
+	mul		___372_m $tmp82 ___372_NdotH 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:68
 # }
-	mul		$tmp68 ___372_F ___372_D 	%line{68} %argrw{"wrr"}
-	mul		$tmp69 $tmp68 ___372_G 	%argrw{"wrr"}
-	div		$tmp70 $tmp69 ___372_m 	%argrw{"wrr"}
-	max		$tmp32 $tmp70 $const5 	%argrw{"wrr"}
+	mul		$tmp83 ___372_F ___372_D 	%line{68} %argrw{"wrr"}
+	mul		$tmp84 $tmp83 ___372_G 	%argrw{"wrr"}
+	div		$tmp85 $tmp84 ___372_m 	%argrw{"wrr"}
+	max		$tmp47 $tmp85 $const3 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:146
 # 
-	mul		___374_spec $tmp32 light_color 	%line{146} %argrw{"wrr"}
+	mul		___374_spec $tmp47 light_color 	%line{146} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:151
 # 
-	assign		$tmp73 $tmp1 	%line{151} %argrw{"wr"}
-	functioncall	$const23 123 	%argrw{"r"}
+	assign		$tmp88 $tmp16 	%line{151} %argrw{"wr"}
+	functioncall	$const27 151 	%argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:10
 # }
-	sub		$tmp74 albedo_map $const22 	%line{10} %argrw{"wrr"}
-	mul		$tmp75 $tmp73 $tmp74 	%argrw{"wrr"}
-	add		$tmp71 $const22 $tmp75 	%argrw{"wrr"}
+	sub		$tmp89 albedo_map $const26 	%line{10} %argrw{"wrr"}
+	mul		$tmp90 $tmp88 $tmp89 	%argrw{"wrr"}
+	add		$tmp86 $const26 $tmp90 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:151
 # 
-	mul		___374_spec ___374_spec $tmp71 	%line{151} %argrw{"wrr"}
+	mul		___374_spec ___374_spec $tmp86 	%line{151} %argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:154
 #     //return spec;
-	sub		$tmp77 $const4 smooth_map 	%line{154} %argrw{"wrr"}
-	mul		$tmp78 ___374_diffuse $tmp77 	%argrw{"wrr"}
-	mul		$tmp79 ___374_spec smooth_map 	%argrw{"wrr"}
-	add		$tmp80 $tmp78 $tmp79 	%argrw{"wrr"}
-	max		final_color $const24 $tmp80 	%argrw{"wrr"}
-# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:198
-#     
-	mul		$tmp81 albedo_map ambient_light 	%line{198} %argrw{"wrr"}
-	add		final_color final_color $tmp81 	%argrw{"wrr"}
+	sub		$tmp92 $const6 smooth_map 	%line{154} %argrw{"wrr"}
+	mul		$tmp93 ___374_diffuse $tmp92 	%argrw{"wrr"}
+	mul		$tmp94 ___374_spec smooth_map 	%argrw{"wrr"}
+	add		$tmp95 $tmp93 $tmp94 	%argrw{"wrr"}
+	max		final_color $const28 $tmp95 	%argrw{"wrr"}
+# C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:224
+# }
+	mul		$tmp96 albedo_map ambient_light 	%line{224} %argrw{"wrr"}
+	add		final_color final_color $tmp96 	%argrw{"wrr"}
 	end

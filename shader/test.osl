@@ -154,21 +154,37 @@ color CalcLighting(
     //return spec;
 }
 
+normal calc_normal(normal n,color normal_map,vector tangent)
+{
+    normal binSpaceNormal = pow(normal_map, 1.0 / 2.2);
+    binSpaceNormal = (binSpaceNormal * 2.0) - 1.0;
+    float tmp = binSpaceNormal.y;
+    binSpaceNormal.x *= -1.0;
+    binSpaceNormal.y = binSpaceNormal.z;
+    binSpaceNormal.z = tmp;
+
+    normal biNormal = cross(n,tangent);
+
+    return tangent * binSpaceNormal.x + biNormal * binSpaceNormal.z + n * binSpaceNormal.y;
+}
 
 
 shader simple_material(
     //アルベドテクスチャ
     color albedo_map = color(0.0, 0.0, 0.0),
-    //法線
-    normal normal_map = N,
+    float albedo_alpha = 1.0,
+    //法線マップ
+    color normal_map = color(0.0,0.0,0.0),
     //メタリック
     color metallic_map = color(0.0,0.0,0.0),
     //スムース
     float smooth_map = 0.0,
     //ワールド座標
     vector world_pos = vector(0.0,0.0,0.0),
-    //カメラからオブジェクトへの正規化されたベクトル
-    vector camera_vector = vector(0.0,0.0,0.0),
+    //接線
+    vector tangent = vector(0.0,0.0,0.0),
+    //法線マップを使用する？
+    int isUseNormalMap = 0,
     //ライトの色
     vector light_color = vector(1.2,1.2,1.2),
     //ライトの方向
@@ -179,21 +195,30 @@ shader simple_material(
     output color final_color  = color(0.0,0.0,0.0)
     )
 {
-    //final_color = camera_vector;
-    //vector to_eye = camera_vector;
+    color albedo_color = albedo_map * albedo_alpha;
+
+    //カメラの座標
+    point camera_pos = point("camera",0,0,0) - point("world",0,0,0);
+    //カメラに向かうベクトル
+    vector to_eye = normalize(camera_pos - world_pos);
+    //ディレクションライトを正規化
     vector light_dir = normalize(light_direction);
+
+    normal newNormal = N;
+    if(isUseNormalMap)
+    {
+        newNormal = calc_normal(newNormal,normal_map,tangent);
+    }
 
     final_color = CalcLighting(
         light_dir,
         light_color,
-        normal_map,
-        camera_vector,
+        newNormal,
+        to_eye,
         albedo_map,
         metallic_map.r,
         smooth_map,
         albedo_map
     );
-
     final_color += albedo_map * ambient_light;
-    
 }
