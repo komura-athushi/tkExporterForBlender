@@ -215,10 +215,10 @@ shader simple_material(
         light_color,
         newNormal,
         to_eye,
-        albedo_map,
+        albedo_color,
         metallic_map.r,
         smooth_map,
-        albedo_map
+        albedo_color
     );
     final_color += albedo_map * ambient_light;
 }
