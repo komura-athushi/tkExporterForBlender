@@ -179,6 +179,8 @@ shader simple_material(
     output color final_color  = color(0.0,0.0,0.0)
     )
 {
+    //final_color = camera_vector;
+    //vector to_eye = camera_vector;
     vector to_eye = normalize(camera_vector-world_pos);
     vector light_dir = normalize(light_direction);
 
@@ -194,5 +196,5 @@ shader simple_material(
     );
 
     final_color += albedo_map * ambient_light;
-    //final_color = to_eye;
+    
 }

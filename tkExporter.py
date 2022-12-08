@@ -5,6 +5,15 @@ import re
 import pathlib
 
 import bpy
+
+from bpy.props import (
+    IntProperty,
+    FloatProperty,
+    FloatVectorProperty,
+    EnumProperty,
+    BoolProperty,
+)
+
 from bpy.props import StringProperty
 from bpy.props import BoolProperty
 import mathutils
@@ -28,7 +37,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 6, 0, 0),
+    "version": (1, 6, 1, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -44,7 +53,7 @@ class TkExporter_PT_Panel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
-    
+
     def draw(self, context):
         self.layout.operator("tkexporter.tkm")
         self.layout.operator("tkexporter.skeleton")
@@ -94,7 +103,7 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         context.window_manager.fileselect_add(self)
         #ここはRUNNING_MODALで固定？
         return {'RUNNING_MODAL'}
-    
+
     #invokeの後に呼ばれる関数
     def execute(self, context):
         #編集モードに切り替える
@@ -155,7 +164,7 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         bpy.ops.object.mode_set(mode='EDIT', toggle=False)
         edit_bones = list(self.armature.data.edit_bones)
         bone_number = 0
-        for bone in edit_bones: 
+        for bone in edit_bones:
             #ボーンの名前をキー、番号を値とする辞書を作成
             self.bones[bone.name] = bone_number
             bone_number += 1
@@ -168,10 +177,10 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
 
 #スケルトン出力オペレーション
 class TkExporter_OT_Skeleton(bpy.types.Operator):
-    
+
     bl_idname = "tkexporter.skeleton"
     bl_label = "createSkeleton"
-    
+
     filename_ext = ".tks"
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
@@ -220,10 +229,10 @@ class TkExporter_OT_Skeleton(bpy.types.Operator):
 
 #アニメーション出力オペレーション
 class TkExporter_OT_Animation(bpy.types.Operator):
-    
+
     bl_idname = "tkexporter.animation"
     bl_label = "createAnimation"
-    
+
     filename_ext = ".tka"
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
@@ -234,7 +243,7 @@ class TkExporter_OT_Animation(bpy.types.Operator):
         maxlen=1024,
         subtype='FILE_PATH',
     )
-    
+
     def print_data(self,message):
         self.report({'INFO'}, str(message))
 
@@ -259,10 +268,10 @@ class TkExporter_OT_Animation(bpy.types.Operator):
         #ファイルダイアログを開く。
         #ダイアログが閉じたとき、execute()を呼んでくれるらしい。
         context.window_manager.fileselect_add(self)
-        
+
         return {'RUNNING_MODAL'}
-    
-    
+
+
     #アニメーション出力をやる関数
     def execute(self, context):
         #エディットモードとポーズモードでボーンの並びが違うので
@@ -280,7 +289,7 @@ class TkExporter_OT_Level(bpy.types.Operator):
 
     bl_idname = "tkexporter.level"
     bl_label = "createLevel"
-    
+
     filename_ext = ".tkl"
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
@@ -322,8 +331,8 @@ class TkExporter_OT_Level(bpy.types.Operator):
         #ダイアログが閉じたとき、execute()を呼んでくれるらしい。
         context.window_manager.fileselect_add(self)
         return {'RUNNING_MODAL'}
-    
-    
+
+
     #レベル出力をやる関数
     def execute(self, context):
         self.tkl = tklExporter.TkExporter_Level()
@@ -331,19 +340,52 @@ class TkExporter_OT_Level(bpy.types.Operator):
         self.print_data("Finished making level file.")
         return {'FINISHED'}
 
+
+#オブジェクトプロパティにパネルを追加する
+class TkExporter_PR_Panel(bpy.types.Panel):
+    bl_label = "Level_Parameter"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"
+
+    def draw(self, context):
+        # アクティブなオブジェクトの "foo" の値を表示
+        self.layout.prop(bpy.context.active_object, "isShadowCaster")
+        self.layout.prop(bpy.context.active_object, "isShadowReceiver")
+
+#オブジェクトに各プロパティを追加する
+def add_property():
+    #シャドウキャスター
+    isShadowCaster = bpy.props.BoolProperty(
+        name="isShadowCaster",
+        description="If it's true, it is ShadowCaster.",
+        default=True
+    )
+    #シャドウレシーバー
+    isShadowReceiver = bpy.props.BoolProperty(
+        name="isShadowReceiver",
+        description="If it's true, it is ShadowReceiver.",
+        default=True
+    )
+    #オブジェクトにプロパティを追加
+    bpy.types.Object.isShadowCaster = isShadowCaster
+    bpy.types.Object.isShadowReceiver = isShadowReceiver
+
 #各クラスの配列
 classes = {
     TkExporter_PT_Panel,
     TkExporter_OT_Tkm,
     TkExporter_OT_Skeleton,
     TkExporter_OT_Animation,
-    TkExporter_OT_Level
+    TkExporter_OT_Level,
+    TkExporter_PR_Panel
 }
 
 #クラスをblenderに追加していきます
 def register():
     for c in classes:
         bpy.utils.register_class(c)
+    add_property()
 
 #クラスをblenderから外します。
 def unregister():

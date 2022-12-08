@@ -93,9 +93,15 @@ class TkExporter_Level():
                 #シャドウフラグの調整
                 #todo Blenderにパネルを追加して設定できるようにしたい
                 #シャドウキャスターフラグ
-                target.write(struct.pack("<?", 0))
+                if obj.isShadowCaster:
+                    target.write(struct.pack("<?", 1))
+                else:
+                    target.write(struct.pack("<?", 0))
                 #シャドウレシーバーフラグ
-                target.write(struct.pack("<?", 0))
+                if obj.isShadowReceiver:
+                    target.write(struct.pack("<?", 1))
+                else:
+                    target.write(struct.pack("<?", 0))
 
                 #それぞれのデータ
                 #todo Blenderにパネルを追加して設定できるようにしたい
