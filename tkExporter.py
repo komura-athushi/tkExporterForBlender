@@ -68,6 +68,7 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
     bl_label = "createTkm"
     #ファイル拡張子
     filename_ext = ".tkm"
+    bl_description = "Output a tkm file. The tkm file is required to display the 3D model."
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
     filepath : StringProperty(
@@ -182,6 +183,7 @@ class TkExporter_OT_Skeleton(bpy.types.Operator):
     bl_label = "createSkeleton"
 
     filename_ext = ".tks"
+    bl_description = "Output a tks file. The tks file is required to play the animation and must also have the same file name as the tkm file."
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
     filepath : StringProperty(
@@ -234,6 +236,7 @@ class TkExporter_OT_Animation(bpy.types.Operator):
     bl_label = "createAnimation"
 
     filename_ext = ".tka"
+    bl_description = "Output a tka file.The tka file is required to play the animation."
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
     filepath : StringProperty(
@@ -291,6 +294,7 @@ class TkExporter_OT_Level(bpy.types.Operator):
     bl_label = "createLevel"
 
     filename_ext = ".tkl"
+    bl_description = "Output a tkl file. The tkl file stores the placement data for each object in Blender."
 
     #ダイアログから受け取ったファイル名を入れておく変数(?)。
     filepath : StringProperty(

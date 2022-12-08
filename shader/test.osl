@@ -167,7 +167,7 @@ shader simple_material(
     float smooth_map = 0.0,
     //ワールド座標
     vector world_pos = vector(0.0,0.0,0.0),
-    //カメラ座標
+    //カメラからオブジェクトへの正規化されたベクトル
     vector camera_vector = vector(0.0,0.0,0.0),
     //ライトの色
     vector light_color = vector(1.2,1.2,1.2),
@@ -181,14 +181,13 @@ shader simple_material(
 {
     //final_color = camera_vector;
     //vector to_eye = camera_vector;
-    vector to_eye = normalize(camera_vector-world_pos);
     vector light_dir = normalize(light_direction);
 
     final_color = CalcLighting(
         light_dir,
         light_color,
         normal_map,
-        to_eye,
+        camera_vector,
         albedo_map,
         metallic_map.r,
         smooth_map,
