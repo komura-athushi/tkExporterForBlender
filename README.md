@@ -44,6 +44,7 @@ Takayama様、この場を借りてお礼申し上げます。
   **12/8&nbsp;&nbsp;ver.1.6.1**
 　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
   <br>&nbsp;&nbsp;各オペレーターに説明分を追加。
+  <br>&nbsp;&nbsp;シェーダーを修正。
 
 # 概要
 非公式Blender版tkExporterです。
@@ -76,12 +77,15 @@ Blender3.3.1にて動作確認済みです。
 <br>4.&nbsp;tkExporterForBlender/shader/test.oslを選択
 <br>![27](https://user-images.githubusercontent.com/44657623/205442801-8629d1df-0066-451d-9d7a-830f2ea637d4.png)
 <br>5.&nbsp;以下のようにノードを繋いでください。
-<br>![28](https://user-images.githubusercontent.com/44657623/205443023-45965278-8fdc-4beb-82d8-2d5fffafdd4f.png)
-<br>![29](https://user-images.githubusercontent.com/44657623/205443032-8f066e4d-bed4-415b-843e-30bb202fce7f.png)
+<br>![28](https://user-images.githubusercontent.com/44657623/206435933-cdb4783b-3681-4b2d-8fa6-269b9f159431.png)
+<br>![29](https://user-images.githubusercontent.com/44657623/206436662-de88545f-423b-42e2-ac1b-6b48724e8bae.png)
+
 <br>6.&nbsp;シェーディングを「**レンダー**」に
 <br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
-<br>各パラメータを弄れば、以下のようにモデルが光ります。
-<br>![31](https://user-images.githubusercontent.com/44657623/205804606-3f8c0380-4fe5-4607-9801-629cb0ff1a5e.png)
+<br>![33](https://user-images.githubusercontent.com/44657623/206437076-b995e07b-d44a-41fb-a6a8-111cc55a6dcb.png)
+<br>各パラメータを弄れば、以下のようにモデルがライティングされます。
+<br>![31](https://user-images.githubusercontent.com/44657623/206435741-9648b8b0-cd40-41a9-87bb-d22aafa48f46.png)
+<br>![34](https://user-images.githubusercontent.com/44657623/206437582-52d126aa-0d9d-4b37-a628-d8ed9c2ba15f.png)
 
 
 
