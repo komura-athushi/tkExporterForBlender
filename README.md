@@ -43,6 +43,7 @@ Takayama様、この場を借りてお礼申し上げます。
  <br>
   **12/8&nbsp;&nbsp;ver.1.6.1**
 　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
+  <br>&nbsp;&nbsp;各オペレーターに説明分を追加。
 
 # 概要
 非公式Blender版tkExporterです。
