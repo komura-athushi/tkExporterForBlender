@@ -40,6 +40,9 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>
  **12/3&nbsp;&nbsp;ver.1.6.0**
 　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加(**要検証**)。
+ <br>
+  **12/8&nbsp;&nbsp;ver.1.6.1**
+　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
 
 # 概要
 非公式Blender版tkExporterです。
@@ -134,6 +137,10 @@ Blender3.3.1にて動作確認済みです。
 
 
 # tklファイル出力
+**Level_Parameterパネルにtkl用のパラメータを追加しています。**
+<br>![32](https://user-images.githubusercontent.com/44657623/206342443-4c19ecd1-9d6d-47b8-87b9-258b0233b3e6.png)
+<br>
+<br>
 1.&nbsp;コレクションを選択。(コレクションを選択しない場合は、シーンコレクションを選択した扱いになって、すべてのオブジェクトが対象になります。)
 <br>![18](https://user-images.githubusercontent.com/44657623/204429635-0fc5d36d-19d7-43f9-9db3-342d4995b955.png)
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createLevel
