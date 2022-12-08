@@ -40,6 +40,7 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>
  **12/3&nbsp;&nbsp;ver.1.6.0**
 　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加(**要検証**)。
+ <br>
   **12/8&nbsp;&nbsp;ver.1.6.1**
 　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
 
