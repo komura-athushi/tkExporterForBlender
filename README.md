@@ -113,14 +113,14 @@ Blender3.3.1にて動作確認済みです。
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createTkm
 <br>![7](https://user-images.githubusercontent.com/44657623/202903877-d500505a-b454-425c-9c36-96f8e9995bac.png)
 <br>3.&nbsp;ファイルパスを指定して、createTkm
-<br>(Output all mesh on Collectionに✓を入れると、**選択したCollection上に存在する全てのMesh**を対象にtkmファイルを出力します、✓を入れなければ**選択したMeshオブジェクト(1つ)**をtkmファイルとして出力します)
+<br>(Output all mesh on Collectionに✓を入れると、**選択したCollection上に存在する全てのMesh**を対象にtkmファイルを出力します、✓を入れなければ**選択したMeshオブジェクト**(1つ)をtkmファイルとして出力します)
 <br>![23](https://user-images.githubusercontent.com/44657623/204789146-f12b44d2-7cae-4537-b80e-cc32da0b4f10.png)
 # tksファイル出力
 1.&nbsp;tksファイルに出力したい**アーマチュアオブジェクト**を選択
 <br>![9](https://user-images.githubusercontent.com/44657623/203451472-adcddb27-0e22-4bcd-9b22-aa4f2256857c.png)
 <br>2.&nbsp;オブジェクトプロパティ→TKExporter→createSkeleton
 <br>![10](https://user-images.githubusercontent.com/44657623/203451565-507c5056-17e1-4b39-80ad-417ae7317715.png)
-<br>3.&nbsp;ファイルパスを指定してcreateSkeleton
+<br>3.&nbsp;ファイルパスを指定してcreateSkeleton(tkmと同じファイル名にしてください)
 <br>![11](https://user-images.githubusercontent.com/44657623/203451713-518cb6a0-f277-4a95-99f7-0747a1510a28.png)
 
 # tkaファイル出力
