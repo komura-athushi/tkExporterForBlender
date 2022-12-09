@@ -6,6 +6,46 @@ Takayama様、この場を借りてお礼申し上げます。
 <br>大変参考にさせて頂きました。
 <br>https://qiita.com/kenyoshi17/items/b93bbba6451e3c6017e5
 
+# 更新履歴
+ **11/20&nbsp;&nbsp;ver.1.0.0**
+  <br>&nbsp;&nbsp;tkmファイルの出力、アルベドファイルの取得及びdds変換出力実装(単一メッシュ、単一マテリアル、ボーンなしのみ対応)
+<br>
+ **11/22&nbsp;&nbsp;ver.1.1.0**
+  <br>&nbsp;&nbsp;スキンウェイト・スキンインデックスも出力できるように(動作要検証)
+<br>
+ **11/23&nbsp;&nbsp;ver.1.2.0**
+  <br>&nbsp;&nbsp;tksファイル出力実装(動作要検証)
+<br>
+ **11/25&nbsp;&nbsp;ver.1.3.0**
+  <br>&nbsp;&nbsp;tkaファイル出力実装(動作要検証、アニメーショイベント対応)
+<br>
+ **11/27&nbsp;&nbsp;ver.1.3.1**
+  <br>&nbsp;&nbsp;複数のマテリアルを割り当てられている単一メッシュのtkmファイル出力対応(動作要検証)。
+ <br>
+ **11/28&nbsp;&nbsp;ver.1.3.2**
+  <br>&nbsp;&nbsp;tkm出力の際に、重複する頂点データは使いまわすように(動作要検証)。
+   <br>
+ **11/29&nbsp;&nbsp;ver.1.4.0**
+  <br>&nbsp;&nbsp;tklファイル出力実装(動作要検証)。
+     <br>
+ **11/30&nbsp;&nbsp;ver.1.5.0**
+　<br>&nbsp;&nbsp;Collection内にある全てのMeshを1つのtkmファイルとして出力できるように。
+  <br>&nbsp;&nbsp;tkmファイル出力時に、各頂点座標にワールド行列を乗算するようにした(これでいいのかは分からない)。
+  <br>
+ **12/1&nbsp;&nbsp;ver.1.5.1**
+　<br>&nbsp;&nbsp;tkmファイル出力時の、頂点データのスキンインデックスの値を修正。
+  <br>
+ **12/2&nbsp;&nbsp;ver.1.5.2**
+　<br>&nbsp;&nbsp;tkmファイル出力時、アルベド以外のテクスチャも設定可能に。
+  <br>
+ **12/3&nbsp;&nbsp;ver.1.6.0**
+　<br>&nbsp;&nbsp;OSL(Open Shading Language)版k2EngineShader.fxを追加(**要検証**)。
+ <br>
+  **12/8&nbsp;&nbsp;ver.1.6.1**
+　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
+  <br>&nbsp;&nbsp;各オペレーターに説明分を追加。
+  <br>&nbsp;&nbsp;シェーダーを修正。
+
 # 概要
 非公式Blender版tkExporterです。
 Blender3.3.1にて動作確認済みです。
