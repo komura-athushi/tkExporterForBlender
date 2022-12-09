@@ -103,6 +103,7 @@ Blender3.3.1にて動作確認済みです。
 <br>![4](https://user-images.githubusercontent.com/44657623/202903175-8986e331-61f4-4f9b-98ea-b3214c57adc8.png)
 <br><br>
 **アルベドテクスチャのdds変換出力を行いたい場合は、makefile、mk.bat、texconv.exeファイルをblender.exeがあるフォルダにコピーしてください。**
+<br>**テクスチャのファイルパスに空白が含まれていると(例:3D Objects)、dds出力に失敗します。**
 <br>![5](https://user-images.githubusercontent.com/44657623/202903461-e0485e01-c978-42fa-910a-a77068ee66f0.png)
 <br><br>
 1.&nbsp;tkmファイルに出力したい**メッシュオブジェクト**を選択or**Collection**を選択
