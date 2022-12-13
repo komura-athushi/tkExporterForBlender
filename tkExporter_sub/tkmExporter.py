@@ -26,6 +26,7 @@ class UVVertex:
 
 class Mesh:
     def __init__(self):
+        self.is_flatshading = False
         return
     
     def build_vertex_and_index(self,mesh,matrix_world,bones):
@@ -67,12 +68,15 @@ class Mesh:
 
         #既にUV頂点バッファにインデックスが既に存在していたら
         if vertex_index in self.uv_vertices:
-            for uv_vertex in self.uv_vertices[vertex_index]:
-                #UVが一致していたら
-                if vertex_uv[0] == uv_vertex.uv[0] and vertex_uv[1] == uv_vertex.uv[1]:
-                    #インデックスバッファにインデックスを追加して終わり
-                    self.indices[material_index].append(uv_vertex.index)
-                    return
+            #フラットシェーディングでないなら
+            #頂点の重複を許す
+            if self.is_flatshading == False:
+                for uv_vertex in self.uv_vertices[vertex_index]:
+                    #UVが一致していたら
+                    if vertex_uv[0] == uv_vertex.uv[0] and vertex_uv[1] == uv_vertex.uv[1]:
+                        #インデックスバッファにインデックスを追加して終わり
+                        self.indices[material_index].append(uv_vertex.index)
+                        return
 
             #一致するUV頂点が存在しなければ
             uv_vertex = UVVertex()
@@ -160,14 +164,20 @@ class Mesh:
 class TkExporter_Tkm():
     #tkmファイルのバージョン
     TKM_VERSION = 100
-            
+    
+    def __init__(self):
+        self.is_flatshading = False
+
     def write_file(self,filepath):
         #ファイルオープン
         with open(filepath, "wb") as target:
             #tkmのバージョンを出力
             target.write( struct.pack("<B",  self.TKM_VERSION))
             #フラットシェーディング
-            target.write(struct.pack("<B",0))
+            if self.is_flatshading:
+                target.write(struct.pack("<?",1))
+            else:
+                target.write(struct.pack("<?",0))
             #メッシュパーツの数を出力
             target.write(struct.pack("<H",len(self.meshs)))
             
@@ -269,6 +279,7 @@ class TkExporter_Tkm():
         self.meshs = []
         for ms in mesh_datas:
             mesh = Mesh()
+            mesh.is_flatshading = self.is_flatshading
             mesh.build_vertex_and_index(ms,ms.matrix_world,bones)
             mesh.get_texture_filepath(ms)
             self.meshs.append(mesh)

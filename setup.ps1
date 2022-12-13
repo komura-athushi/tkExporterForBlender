@@ -25,4 +25,6 @@ $copyDstFolderPrefix = $appData + "\Blender Foundation\Blender\3.3\scripts\addon
 #フォルダを作成
 New-Item $copyDstFolderPrefix -ItemType Directory
 
+
+
 CopyAndCreateShortCut("3.3")

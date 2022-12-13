@@ -1,6 +1,6 @@
 OpenShadingLanguage 1.00
 # Compiled by oslc 1.11.17
-# options: -o C:\Users\akuro\AppData\Local\Temp\tmp09t00w2m.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
+# options: -o C:\Users\akuro\Desktop\udemy\blender\..\..\..\Documents\kawahara\tkExporterForBlender\shader\test.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
 shader simple_material
 param	color	albedo_map	0 0 0		%read{0,157} %write{2147483647,-1}
 param	float	albedo_alpha	1		%read{0,0} %write{2147483647,-1}
@@ -48,7 +48,7 @@ local	vector	___374_spec	%read{151,154} %write{145,151}
 local	normal	___375_binSpaceNormal	%read{12,27} %write{11,20}
 local	float	___375_tmp	%read{20,20} %write{14,14}
 local	normal	___375_biNormal	%read{25,25} %write{21,21}
-local	color	albedo_color	%read{2147483647,-1} %write{0,0}
+local	color	albedo_color	%read{81,148} %write{0,0}
 local	point	camera_pos	%read{4,4} %write{3,3}
 local	vector	to_eye	%read{34,104} %write{5,5}
 local	vector	light_dir	%read{32,83} %write{6,6}
@@ -334,7 +334,7 @@ code ___main___
 	div		___374_lambertDiffuse $tmp45 $const20 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:140
 # 
-	mul		$tmp46 albedo_map ___374_diffuseFromFresnel 	%line{140} %argrw{"wrr"}
+	mul		$tmp46 albedo_color ___374_diffuseFromFresnel 	%line{140} %argrw{"wrr"}
 	mul		___374_diffuse $tmp46 ___374_lambertDiffuse 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:145
 #         * ligColor;
@@ -465,7 +465,7 @@ code ___main___
 	functioncall	$const27 151 	%argrw{"r"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:10
 # }
-	sub		$tmp89 albedo_map $const26 	%line{10} %argrw{"wrr"}
+	sub		$tmp89 albedo_color $const26 	%line{10} %argrw{"wrr"}
 	mul		$tmp90 $tmp88 $tmp89 	%argrw{"wrr"}
 	add		$tmp86 $const26 $tmp90 	%argrw{"wrr"}
 # C:\\Users\\akuro\\Desktop\\udemy\\blender\\..\\..\\..\\Documents\\kawahara\\tkExporterForBlender\\shader\\test.osl:151

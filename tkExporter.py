@@ -37,7 +37,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 6, 1, 0),
+    "version": (1, 6, 2, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -85,6 +85,12 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
         default=False,
     )
 
+    isFlatShading : BoolProperty(
+        name="FlatShading.",
+        description="If it's true, it FlatShading.",
+        default=False,
+    )
+
     def print_data(self,message):
         self.report({'INFO'}, str(message))
 
@@ -107,6 +113,9 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
 
     #invokeの後に呼ばれる関数
     def execute(self, context):
+
+        self.tkm.is_flatshading = self.isFlatShading
+
         #編集モードに切り替える
         #bpy.ops.object.mode_set(mode='EDIT')
         #オブジェクトモードに切り替える
@@ -314,7 +323,7 @@ class TkExporter_OT_Level(bpy.types.Operator):
     isDeleteDot : BoolProperty(
         name="Delete name after the dot.",
         description="If it's true, it delete name after the dot.",
-        default=False,
+        default=True,
     )
 
     def print_data(self,message):
@@ -395,3 +404,5 @@ def register():
 def unregister():
     for c in classes:
         bpy.utils.unregister_class(c)
+    del bpy.types.Object.isShadowCaster
+    del bpy.types.Object.isShadowReceiver
