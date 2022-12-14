@@ -48,6 +48,9 @@ Takayama様、この場を借りてお礼申し上げます。
   <br>
  **12/13&nbsp;&nbsp;ver.1.6.2**
 　<br>&nbsp;&nbsp;tkm出力時に、フラットシェーディングか否かを選択できるオプションを追加。
+ <br>
+ **12/14&nbsp;&nbsp;ver.1.6.3**
+　<br>&nbsp;&nbsp;tkl用に、int・float・char・vector型のパラメータを設定、出力できるように(TklFileクラスを修正する必要あり)。
 
 
 # 概要
