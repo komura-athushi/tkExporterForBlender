@@ -360,7 +360,7 @@ class TkExporter_INTPR_Skeleton(bpy.types.Operator):
     bl_idname = "tkexporter.addintparam"
     bl_label = "addIntParam"
 
-    bl_description = "Add an int parameter to the object."
+    bl_description = "Add an int parameter for tkl to the object."
 
     #ボタンを押したら呼ばれる関数
     def execute(self, context):
@@ -382,7 +382,7 @@ class TkExporter_FLOATPR_Skeleton(bpy.types.Operator):
     bl_idname = "tkexporter.addfloatparam"
     bl_label = "addFloatParam"
 
-    bl_description = "Add an float parameter to the object."
+    bl_description = "Add an float parameter for tkl to the object."
 
     #ボタンを押したら呼ばれる関数
     def execute(self, context):
@@ -404,7 +404,7 @@ class TkExporter_CHARPR_Skeleton(bpy.types.Operator):
     bl_idname = "tkexporter.addcharparam"
     bl_label = "addCharParam"
 
-    bl_description = "Add an char parameter to the object."
+    bl_description = "Add an char parameter for tkl to the object."
 
     #ボタンを押したら呼ばれる関数
     def execute(self, context):
@@ -426,7 +426,7 @@ class TkExporter_VECTORPR_Skeleton(bpy.types.Operator):
     bl_idname = "tkexporter.addvectorparam"
     bl_label = "addVectorParam"
 
-    bl_description = "Add an vector parameter to the object."
+    bl_description = "Add an vector parameter for tkl to the object."
 
     #ボタンを押したら呼ばれる関数
     def execute(self, context):
@@ -463,13 +463,13 @@ def add_property():
     #シャドウキャスター
     isShadowCaster = bpy.props.BoolProperty(
         name="isShadowCaster",
-        description="If it's true, it is ShadowCaster.",
+        description="If it's true, it is ShadowCaster for tkl.",
         default=True
     )
     #シャドウレシーバー
     isShadowReceiver = bpy.props.BoolProperty(
         name="isShadowReceiver",
-        description="If it's true, it is ShadowReceiver.",
+        description="If it's true, it is ShadowReceiver for tkl.",
         default=True
     )
     #オブジェクトにプロパティを追加
