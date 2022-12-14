@@ -1,6 +1,6 @@
 OpenShadingLanguage 1.00
 # Compiled by oslc 1.11.17
-# options: -o C:\Users\akuro\Desktop\udemy\blender\..\..\..\Documents\kawahara\tkExporterForBlender\shader\test.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
+# options: -o C:\Users\akuro\AppData\Local\Temp\tmpm0yo021u.oso -IC:\Program Files\Blender Foundation\Blender 3.3\3.3\scripts\addons\cycles\shader
 shader simple_material
 param	color	albedo_map	0 0 0		%read{0,157} %write{2147483647,-1}
 param	float	albedo_alpha	1		%read{0,0} %write{2147483647,-1}

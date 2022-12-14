@@ -354,6 +354,94 @@ class TkExporter_OT_Level(bpy.types.Operator):
         return {'FINISHED'}
 
 
+#int型のレベル用パラメータを追加する。
+class TkExporter_INTPR_Skeleton(bpy.types.Operator):
+
+    bl_idname = "tkexporter.addintparam"
+    bl_label = "addIntParam"
+
+    bl_description = "Add an int parameter to the object."
+
+    #ボタンを押したら呼ばれる関数
+    def execute(self, context):
+        obj = context.object
+        max_number = 1
+        for key,value in obj.items():
+            try:
+                number = int(re.sub(r"\D", "", key))
+                if max_number <= number:
+                    max_number = number+1
+            except:
+                pass
+        obj["tkl_Int{index}".format(index=max_number)] = 0
+        return{'FINISHED'}
+
+#float型のレベル用パラメータを追加する。
+class TkExporter_FLOATPR_Skeleton(bpy.types.Operator):
+
+    bl_idname = "tkexporter.addfloatparam"
+    bl_label = "addFloatParam"
+
+    bl_description = "Add an float parameter to the object."
+
+    #ボタンを押したら呼ばれる関数
+    def execute(self, context):
+        obj = context.object
+        max_number = 1
+        for key,value in obj.items():
+            try:
+                number = int(re.sub(r"\D", "", key))
+                if max_number <= number:
+                    max_number = number + 1
+            except:
+                pass
+        obj["tkl_Float{index}".format(index=max_number)] = 0.0
+        return{'FINISHED'}
+
+#char型のレベル用パラメータを追加する。
+class TkExporter_CHARPR_Skeleton(bpy.types.Operator):
+
+    bl_idname = "tkexporter.addcharparam"
+    bl_label = "addCharParam"
+
+    bl_description = "Add an char parameter to the object."
+
+    #ボタンを押したら呼ばれる関数
+    def execute(self, context):
+        obj = context.object
+        max_number = 1
+        for key,value in obj.items():
+            try:
+                number = int(re.sub(r"\D", "", key))
+                if max_number <= number:
+                    max_number = number + 1
+            except:
+                pass
+        obj["tkl_Char{index}".format(index=max_number)] = ""
+        return{'FINISHED'}
+
+#vector型のレベル用パラメータを追加する。
+class TkExporter_VECTORPR_Skeleton(bpy.types.Operator):
+
+    bl_idname = "tkexporter.addvectorparam"
+    bl_label = "addVectorParam"
+
+    bl_description = "Add an vector parameter to the object."
+
+    #ボタンを押したら呼ばれる関数
+    def execute(self, context):
+        obj = context.object
+        max_number = 1
+        for key,value in obj.items():
+            try:
+                number = int(re.sub(r"\D", "", key))
+                if max_number <= number:
+                    max_number = number + 1
+            except:
+                pass
+        obj["tkl_Vector{index}".format(index=max_number)] = [0.0,0.0,0.0]
+        return{'FINISHED'}
+
 #オブジェクトプロパティにパネルを追加する
 class TkExporter_PR_Panel(bpy.types.Panel):
     bl_label = "Level_Parameter"
@@ -365,6 +453,10 @@ class TkExporter_PR_Panel(bpy.types.Panel):
         # アクティブなオブジェクトの "foo" の値を表示
         self.layout.prop(bpy.context.active_object, "isShadowCaster")
         self.layout.prop(bpy.context.active_object, "isShadowReceiver")
+        self.layout.operator("tkexporter.addintparam")
+        self.layout.operator("tkexporter.addfloatparam")
+        self.layout.operator("tkexporter.addcharparam")
+        self.layout.operator("tkexporter.addvectorparam")
 
 #オブジェクトに各プロパティを追加する
 def add_property():
@@ -391,7 +483,11 @@ classes = {
     TkExporter_OT_Skeleton,
     TkExporter_OT_Animation,
     TkExporter_OT_Level,
-    TkExporter_PR_Panel
+    TkExporter_INTPR_Skeleton,
+    TkExporter_FLOATPR_Skeleton,
+    TkExporter_CHARPR_Skeleton,
+    TkExporter_VECTORPR_Skeleton,
+    TkExporter_PR_Panel,
 }
 
 #クラスをblenderに追加していきます

@@ -42,14 +42,12 @@ class TkExporter_Level():
                 target.write(struct.pack("<f", 0))#行列(どうせ無視されるの)
 
             #シャドウフラグの調整
-            #todo Blenderにパネルを追加して設定できるようにしたい
             #シャドウキャスターフラグ
             target.write(struct.pack("<?", 0))
             #シャドウレシーバーフラグ
             target.write(struct.pack("<?", 0))
 
             #それぞれのデータ
-            #todo Blenderにパネルを追加して設定できるようにしたい
             #intデータ
             target.write(struct.pack("<i", 0))
             #floatデータ
@@ -60,20 +58,20 @@ class TkExporter_Level():
             target.write(struct.pack("<i", 0))
             
             #ここから各オブジェクトの情報
-            for obj in colle.all_objects:
-                name = obj.name
+            for obj_data in colle.all_objects:
+                name = obj_data.name
                 #ドット以下削除
                 if isDeleteDot:
                     name = deleteAfterDot(name)
                 #エンコード(バイト文字列に変換)
-                name = name.encode("shift_jis")
+                name_jis = name.encode("shift_jis")
 
-                target.write(struct.pack("<B", len(name)))#名前の長さ
-                target.write(name + b"\0")#オブジェクトの名前
+                target.write(struct.pack("<B", len(name_jis)))#名前の長さ
+                target.write(name_jis + b"\0")#オブジェクトの名前
                 target.write(struct.pack("<i", 0))#親の番号(実際には親ではなくコレクションだが、とりあえず0番を入れとく)
 
                 #オブジェクトのワールド行列を取得
-                objMat = copy.deepcopy(obj.matrix_world)
+                objMat = copy.deepcopy(obj_data.matrix_world)
 
                 objMat.transpose()#転置する。blenderは列優先。tkは行優先です。
 
@@ -91,27 +89,55 @@ class TkExporter_Level():
                 
 
                 #シャドウフラグの調整
-                #todo Blenderにパネルを追加して設定できるようにしたい
                 #シャドウキャスターフラグ
-                if obj.isShadowCaster:
+                if obj_data.isShadowCaster:
                     target.write(struct.pack("<?", 1))
                 else:
                     target.write(struct.pack("<?", 0))
                 #シャドウレシーバーフラグ
-                if obj.isShadowReceiver:
+                if obj_data.isShadowReceiver:
                     target.write(struct.pack("<?", 1))
                 else:
                     target.write(struct.pack("<?", 0))
 
                 #それぞれのデータ
                 #todo Blenderにパネルを追加して設定できるようにしたい
-                #intデータ
-                target.write(struct.pack("<i", 0))
-                #floatデータ
-                target.write(struct.pack("<i", 0))
-                #charデータ
-                target.write(struct.pack("<i", 0))
-                #Vector3データ
-                target.write(struct.pack("<i", 0))
+
+                #for obj in bpy.data.objects:
+                obj = bpy.data.objects.get(name)
+
+                param_list = []
+                key_list = ["Int","Float","Char","Vector"]
+                for i in range(0,len(key_list)):
+                    param_list.append([])
+                for key,value in obj.items():
+                    index = 0
+                    for i in key_list:
+                        if i in key:
+                            param_list[index].append(value)
+                        index += 1
+            
+                for index in range(0,len(param_list)):
+                    params = param_list[index]
+                    target.write(struct.pack("<i", len(params)))
+                    param_type = key_list[index]
+                    
+                    for param in params:
+                        print(type(param))
+                        #intデータ
+                        if param_type == "Int":
+                            target.write(struct.pack("<i", param))
+                        #floatデータ
+                        if param_type == "Float":
+                            target.write(struct.pack("<f", param))
+                        #charデータ
+                        if param_type == "Char":
+                            print(len(param))
+                            target.write(struct.pack("<B", len(param)))#名前の長さ
+                            target.write(param.encode("shift_jis") + b"\0")
+                        #Vector3データ
+                        if param_type == "Vector":
+                            for i in param:
+                                target.write(struct.pack("<f", i))
                 
         return
