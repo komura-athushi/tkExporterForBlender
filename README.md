@@ -45,6 +45,10 @@ Takayama様、この場を借りてお礼申し上げます。
 　<br>&nbsp;&nbsp;tklファイル用のパラメータを追加(isShadowCaster、isShadowReceiver)。
   <br>&nbsp;&nbsp;各オペレーターに説明分を追加。
   <br>&nbsp;&nbsp;シェーダーを修正。
+  <br>
+ **12/13&nbsp;&nbsp;ver.1.6.2**
+　<br>&nbsp;&nbsp;tkm出力時に、フラットシェーディングか否かを選択できるオプションを追加。
+
 
 # 概要
 非公式Blender版tkExporterです。
