@@ -37,7 +37,7 @@ bl_info = {
     "description": "Informal tkExporter for Blender.\
     Good luck and make an tkmExporter.",
     "author": "komura",
-    "version": (1, 6, 3, 0),
+    "version": (1, 6, 4, 0),
     "blender": (3, 3, 1),
     "category": "Properties",
     "location": "Window",
@@ -114,17 +114,68 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
     #invokeの後に呼ばれる関数
     def execute(self, context):
 
-        self.tkm.is_flatshading = self.isFlatShading
-
-        #編集モードに切り替える
-        #bpy.ops.object.mode_set(mode='EDIT')
         #オブジェクトモードに切り替える
         bpy.ops.object.mode_set(mode='OBJECT')
 
         self.meshs = []
         self.armature = None
         self.bones = {}
+        self.objct_datas = []
 
+        self.tkm.is_flatshading = self.isFlatShading
+
+        #選択したオブジェクトをtkmとして出力するなら
+        if self.isOutputAllMeshOnCollection == False:
+            select_objects = bpy.context.selected_objects
+            for obj in select_objects:
+                self.objct_datas.append(obj)
+        #コレクション下のオブジェクトをtkmとして出力するなら
+        else:
+            #コレクションを取得
+            collection = context.collection
+            #コレクションのオブジェクトを検索
+            for children in collection.all_objects:
+                self.objct_datas.append(children)
+
+        #オブジェクトを検索
+        for object_data in self.objct_datas:
+            if object_data.type == "MESH":
+                self.meshs.append(object_data)
+            elif object_data.type == "ARMATURE":
+                self.armature = object_data
+
+        #メッシュオブジェクトが見つからなかったら
+        if len(self.meshs) == 0:
+            self.report({'INFO'}, "The mesh object does not exist!")
+            return{'FINISHED'}
+
+        #アーマーチュアオブジェクトが存在したら
+        if self.armature != None:
+            # 他のオブジェクトに操作を適用しないよう全てのオブジェクトを走査する
+            for ob in bpy.context.scene.objects:
+                # 非選択状態に設定する
+                ob.select_set(False)
+
+            selectob = bpy.data.objects.get(self.armature.name)
+            # 変更オブジェクトをアクティブに変更する
+            bpy.context.view_layer.objects.active = selectob
+            #編集モードに切り替える
+            bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+            #ボーンの数を取得
+            edit_bones = list(self.armature.data.edit_bones)
+            bone_number = 0
+            for bone in edit_bones:
+                #ボーンの名前をキー、番号を値とする辞書を作成
+                self.bones[bone.name] = bone_number
+                bone_number += 1
+            bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+
+        #tkmファイル出力
+        self.tkm.execute(self.meshs,self.filepath,self.bones)
+        self.print_data("Finished making tkm file.")
+        return {'FINISHED'}
+
+        '''
         #選択したメッシュオブジェクトをtkmとして出力する
         if self.isOutputAllMeshOnCollection == False:
             #選択されたオブジェクトがメッシュでなければ
@@ -179,11 +230,12 @@ class TkExporter_OT_Tkm(bpy.types.Operator):
             self.bones[bone.name] = bone_number
             bone_number += 1
         bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
-
+        
         #tkmファイル出力
         self.tkm.execute(self.meshs,self.filepath,self.bones)
         self.print_data("Finished making tkm file.")
         return {'FINISHED'}
+        '''
 
 #スケルトン出力オペレーション
 class TkExporter_OT_Skeleton(bpy.types.Operator):
