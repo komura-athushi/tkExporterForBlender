@@ -115,7 +115,7 @@ Blender3.3.1にて動作確認済みです。
 <br>![5](https://user-images.githubusercontent.com/44657623/202903461-e0485e01-c978-42fa-910a-a77068ee66f0.png)
 <br><br>
 1.&nbsp;tkmファイルに出力したい**メッシュオブジェクト**(複数可)を選択or**Collection**を選択
-<br>* **ボーンを付けたい場合は、アーマチュアオブジェクトも一緒に選択してください。**
+<br>* **ボーンを紐付ける場合は、アーマチュアオブジェクトも一緒に選択してください。**
 <br>![6](https://user-images.githubusercontent.com/44657623/208357027-5674e439-3d44-4261-818c-bd99960efed2.png)
 <br>![21](https://user-images.githubusercontent.com/44657623/204788193-7d41ea03-761b-4f4d-9ab6-1c043efd62d7.png)
 
