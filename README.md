@@ -91,7 +91,7 @@ Blender3.3.1にて動作確認済みです。
 <br>6.&nbsp;シェーディングを「**レンダー**」に
 <br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
 <br>![33](https://user-images.githubusercontent.com/44657623/206437076-b995e07b-d44a-41fb-a6a8-111cc55a6dcb.png)
-<br>各パラメータを弄れば、以下のようにモデルがライティングされます。
+<br>各パラメータを弄れば、以下のようにモデルがライティングされます。(以下2つは同じモデルです)
 <br>![31](https://user-images.githubusercontent.com/44657623/206435741-9648b8b0-cd40-41a9-87bb-d22aafa48f46.png)
 <br>![34](https://user-images.githubusercontent.com/44657623/206437582-52d126aa-0d9d-4b37-a628-d8ed9c2ba15f.png)
 
