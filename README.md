@@ -85,14 +85,16 @@ Blender3.3.1にて動作確認済みです。
 <br>4.&nbsp;tkExporterForBlender/shader/test.oslを選択
 <br>![27](https://user-images.githubusercontent.com/44657623/205442801-8629d1df-0066-451d-9d7a-830f2ea637d4.png)
 <br>5.&nbsp;以下のようにノードを繋いでください。
-<br>![28](https://user-images.githubusercontent.com/44657623/206435933-cdb4783b-3681-4b2d-8fa6-269b9f159431.png)
-<br>![29](https://user-images.githubusercontent.com/44657623/206436662-de88545f-423b-42e2-ac1b-6b48724e8bae.png)
+<br>![28](https://user-images.githubusercontent.com/44657623/209309617-65fbec35-51f0-42c2-ac74-08e0c09b4ee0.png)
+<br>![29](https://user-images.githubusercontent.com/44657623/209309637-522b6a51-4030-4730-ad54-5804ecae8bff.png)
+
 
 <br>6.&nbsp;シェーディングを「**レンダー**」に
 <br>![30](https://user-images.githubusercontent.com/44657623/205444034-77432cab-8bbe-456b-a789-efe6fe818709.png)
 <br>![33](https://user-images.githubusercontent.com/44657623/206437076-b995e07b-d44a-41fb-a6a8-111cc55a6dcb.png)
 <br>各パラメータを弄れば、以下のようにモデルがライティングされます。
 <br>![31](https://user-images.githubusercontent.com/44657623/208937625-a6d9dc8e-83b6-4665-9a0e-07aa6f7cea94.png)
+<br>![35](https://user-images.githubusercontent.com/44657623/209309347-35936f41-a617-45a4-a1a3-11f172190fa4.png)
 <br>![34](https://user-images.githubusercontent.com/44657623/208937688-5321ed94-6c6a-4f22-842b-5c91ffb52c2b.png)
 
 
